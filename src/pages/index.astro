@@ -1,0 +1,172 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Img from '../components/Img.astro';
+import { projects } from '../data/projects';
+---
+
+<Base>
+  <Hero workHref="#work" />
+
+  <section id="work" class="container projects" aria-label="Selected work">
+    {
+      projects.map((p) => (
+        <article class="project" style={`--accent: ${p.color}`}>
+          <div class="meta">
+            <p class="category">{p.category}</p>
+            <h2 class="title">
+              {p.href ? <a href={p.href}>{p.name}</a> : p.name}
+            </h2>
+            {p.href ? (
+              <a class="btn-outline" href={p.href} style={`--btn-border: ${p.button.border}; --btn-text: ${p.button.text}`}>
+                Explore<span class="visually-hidden"> {p.name}</span>
+              </a>
+            ) : (
+              <span class="btn-outline" aria-disabled="true" style={`--btn-border: ${p.button.border}; --btn-text: ${p.button.text}`}>
+                Coming soon
+              </span>
+            )}
+            <p class="description">
+              <strong style={`color: ${p.markColor}; font-weight: ${p.markWeight}`}>{p.mark}</strong> {p.description}
+            </p>
+          </div>
+          <div class="cover" style={`--cover-max: ${p.cover.maxWidth}px`}>
+            {p.href ? (
+              <a href={p.href} tabindex="-1" aria-hidden="true">
+                <Img src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1280px) 800px, (min-width: 800px) 64vw, 100vw" />
+              </a>
+            ) : (
+              <Img src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1280px) 800px, (min-width: 800px) 64vw, 100vw" />
+            )}
+          </div>
+        </article>
+      ))
+    }
+  </section>
+
+  <section id="about" class="container about" aria-labelledby="about-title">
+    <h2 id="about-title">I’m dedicated to crafting meaningful visual experiences through a multidisciplinary design approach.</h2>
+    <a class="btn-outline" href="/work">Discover my skills and passions</a>
+  </section>
+</Base>
+
+<style>
+  .project {
+    display: grid;
+    grid-template-columns: minmax(240px, 337px) minmax(0, 1fr);
+    gap: 50px;
+    padding-top: 50px;
+    padding-bottom: 80px;
+    border-top: 1px solid var(--accent);
+  }
+
+  .meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 19px;
+  }
+
+  /* "Caption 2" text style: Lora Medium 16, underlined */
+  .category {
+    color: var(--accent);
+    font-family: var(--font-label);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.03;
+    letter-spacing: var(--tracking-tight);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* "Heading" text style: Montserrat Light 50 */
+  .title {
+    color: var(--accent);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: var(--fs-display);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .title a {
+    text-decoration: none;
+  }
+
+  .title a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+
+  .description {
+    margin-top: auto;
+    padding-top: 24px;
+    font-weight: 300;
+    font-size: var(--fs-body);
+    line-height: 1.5;
+  }
+
+  .cover {
+    justify-self: end;
+    width: 100%;
+    max-width: var(--cover-max);
+  }
+
+  .cover :global(img) {
+    width: 100%;
+    border-radius: 4px;
+  }
+
+  .about {
+    display: grid;
+    justify-items: start;
+    gap: 50px;
+    padding-top: 30px;
+    padding-bottom: 40px;
+  }
+
+  .about h2 {
+    max-width: 855px;
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: var(--fs-display);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  @media (max-width: 800px) {
+    .project {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-top: 32px;
+      padding-bottom: 48px;
+    }
+
+    /* Mobile order: label, title, button, image, description. */
+    .meta {
+      display: contents;
+    }
+
+    .category {
+      margin-bottom: 14px;
+    }
+
+    .title {
+      margin-bottom: 14px;
+    }
+
+    .btn-outline {
+      margin-bottom: 24px;
+    }
+
+    .cover {
+      justify-self: stretch;
+      max-width: none;
+    }
+
+    .description {
+      order: 5;
+      padding-top: 20px;
+    }
+  }
+</style>

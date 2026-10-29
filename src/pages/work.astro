@@ -1,0 +1,206 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Img from '../components/Img.astro';
+import { projects } from '../data/projects';
+---
+
+<Base title="Work">
+  <Hero workHref="#bands" />
+
+  <div id="bands" class="bands">
+    {
+      projects.map((p, i) => {
+        const number = String(i + 1).padStart(2, '0');
+        // The design alternates image left / image right, starting with the image on the left.
+        const side = i % 2 === 0 ? 'image-left' : 'image-right';
+        return (
+          <section
+            class:list={['band', side, `band-${p.slug}`, { dark: p.band.dark }]}
+            style={`--band-bg: ${p.band.bg}; --marker: ${p.band.marker}`}
+            aria-labelledby={`band-${p.slug}`}
+          >
+            <div class="media">
+              <Img src={p.band.src} alt={p.band.alt} sizes="(min-width: 800px) 67vw, 100vw" />
+            </div>
+            <div class="text">
+              <h2 id={`band-${p.slug}`}>
+                <span class="marker" aria-hidden="true" />
+                <span class="num">{number}</span>
+                {p.href ? (
+                  <a class="name" href={p.href}>
+                    {p.name}
+                  </a>
+                ) : (
+                  <span class="name">{p.name}</span>
+                )}
+              </h2>
+              <p>
+                {p.mark} {p.description}
+              </p>
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+</Base>
+
+<style>
+  .bands {
+    margin-top: 10px;
+  }
+
+  .band {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 858fr) minmax(0, 422fr);
+    min-height: clamp(420px, 48vw, 616px);
+    background: var(--band-bg);
+    color: var(--ink);
+    overflow: hidden;
+  }
+
+  .band.dark {
+    color: var(--white);
+  }
+
+  .band.image-right {
+    grid-template-columns: minmax(0, 422fr) minmax(0, 858fr);
+  }
+
+  .band.image-right .media {
+    order: 2;
+  }
+
+  .media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100%;
+  }
+
+  .media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .text {
+    align-self: center;
+    padding: 40px var(--gutter) 40px clamp(24px, 3vw, 38px);
+  }
+
+  .image-right .text {
+    padding: 40px clamp(24px, 3vw, 38px) 40px var(--gutter);
+  }
+
+  h2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 21px;
+    margin-bottom: 18px;
+    font-weight: 600;
+    font-size: clamp(2rem, 1.3rem + 2.2vw, 3rem);
+    line-height: 1.1;
+  }
+
+  .marker {
+    flex: none;
+    width: 37px;
+    height: 37px;
+    background: var(--marker);
+  }
+
+  .num {
+    font-weight: 800;
+    margin-right: 10px;
+  }
+
+  .name {
+    text-decoration: none;
+  }
+
+  a.name:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  /* Stretch the case study link over the whole band. */
+  a.name::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .text p {
+    max-width: 335px;
+    font-weight: 300;
+    font-size: var(--fs-body);
+    line-height: 1.5;
+  }
+
+  /* Tiffin: product photo fills the band behind a soft fade on the text side. */
+  .band-tiffin .media :global(img) {
+    object-position: right center;
+  }
+
+  /* GoSafe: transparent phone cut-out overflows the navy band slightly, as in the design. */
+  .band-gosafe .media {
+    position: relative;
+  }
+
+  .band-gosafe .media :global(img) {
+    position: absolute;
+    top: -5%;
+    left: clamp(16px, 4.3vw, 55px);
+    width: auto;
+    height: 110%;
+    object-fit: contain;
+  }
+
+  .band-skillender .media :global(img) {
+    object-fit: contain;
+  }
+
+  @media (max-width: 800px) {
+    .band,
+    .band.image-right {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+
+    .band.image-right .media {
+      order: 0;
+    }
+
+    .media :global(img) {
+      height: auto;
+    }
+
+    .text,
+    .image-right .text {
+      padding: 28px var(--gutter) 44px;
+    }
+
+    .text p {
+      max-width: 60ch;
+    }
+
+    .marker {
+      width: 28px;
+      height: 28px;
+    }
+
+    .band-gosafe .media {
+      padding: 32px var(--gutter) 0;
+    }
+
+    .band-gosafe .media :global(img) {
+      position: static;
+      height: auto;
+      max-height: 460px;
+    }
+  }
+</style>

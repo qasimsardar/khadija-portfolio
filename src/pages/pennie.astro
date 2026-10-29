@@ -1,0 +1,458 @@
+---
+import '@fontsource/pacifico/400.css';
+import '@fontsource/roboto/400.css';
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import { site } from '../data/site';
+
+const marker = 'var(--lime)';
+const palette = [
+  { hex: '#2C2C2C', outline: true },
+  { hex: '#FFFFFF' },
+  { hex: '#D5EE74' },
+  { hex: '#B94FE0' },
+];
+const hifi = [
+  { title: 'Splash and Onboarding Screen', src: 'pennie/hifi-splash.jpg', alt: 'Splash, sign-in and sign-up screens' },
+  {
+    title: 'Home Screen and Menu',
+    src: 'pennie/hifi-home.jpg',
+    alt: 'Annotated home screen showing menu, wallet balance, income and expense chart, daily tip and navigation bar, next to the open menu',
+  },
+  { title: 'Income Page', src: 'pennie/hifi-income.jpg', alt: 'Add income form, date picker and frequency selector' },
+  { title: 'Expenses Page', src: 'pennie/hifi-expenses.jpg', alt: 'Add expense form with category chips, and its date picker' },
+  { title: 'Goals Page', src: 'pennie/hifi-goals.jpg', alt: 'My goals list, add a new goal form, goal type selector and date picker' },
+  { title: 'Budget Set-up Page', src: 'pennie/hifi-budget.jpg', alt: 'Monthly budget donut chart with set-up form, and the budget period selector' },
+  { title: 'Blogs', src: 'pennie/hifi-blogs.jpg', alt: 'Blog list screen and four article screens about saving and budgeting' },
+];
+---
+
+<Base
+  title="Pennie"
+  theme="dark"
+  description="Pennie is a smart, user-friendly budgeting app for people juggling careers, family and unpredictable incomes."
+>
+  <div class="hero bleed">
+    <Img src="pennie/hero.jpg" alt="Two phones showing the Pennie app home screen with wallet balance and spending chart" sizes="100vw" eager />
+  </div>
+
+  <div class="case">
+    <section class="container problem" aria-label="Problem and solution">
+      <div class="problem-text">
+        <SectionTitle marker={marker} variant="bold">Problem</SectionTitle>
+        <p class="copy">
+          People with unpredictable incomes feel overwhelmed managing money. Balancing essentials, savings, and goals is
+          challenging, and most budgeting apps are too complex or rigid. This leads to frustration, guilt, and inconsistent
+          habits.
+        </p>
+        <SectionTitle marker={marker} variant="bold">Solution</SectionTitle>
+        <p class="copy">
+          Pennie simplifies budgeting by helping users track income, log expenses, set goals, and review past spending. With
+          flexible tools and motivational content, it makes money management clear, supportive, and easy to stick with.
+        </p>
+      </div>
+      <Img src="pennie/hand.jpg" alt="Hand holding a phone with the Pennie budget set-up screen" class="hand" sizes="(min-width: 800px) 48vw, 100vw" />
+    </section>
+
+    <section class="container" aria-labelledby="competitive">
+      <SectionTitle marker={marker} variant="bold" id="competitive">Competitive Analysis</SectionTitle>
+      <p class="copy narrow indent">
+        I conducted a competitive audit of four financial apps: Goodbudget, Empower, NerdWallet, and YNAB to understand
+        their strengths, limitations, and user experience strategies. This helped identify opportunities for Pennie to stand
+        out by offering a simpler, more motivating approach to budgeting and saving.
+        {
+          site.pennieAuditUrl && (
+            <>
+              {' '}
+              <a class="lime" href={site.pennieAuditUrl} target="_blank" rel="noopener">
+                View full competitive audit here
+              </a>
+              .
+            </>
+          )
+        }
+      </p>
+      <Img
+        src="pennie/competitors.jpg"
+        alt="Competitor cards for GoodBudget, YNAB and Nerd Wallet summarising their strengths and weaknesses"
+        class="competitors"
+        sizes="(min-width: 1280px) 1038px, 100vw"
+      />
+    </section>
+
+    <section class="container" aria-labelledby="flow">
+      <SectionTitle marker={marker} variant="bold" id="flow">User Flow</SectionTitle>
+      <Img
+        src="pennie/user-flow.jpg"
+        alt="User flow: open the app, sign in or sign up, reach the home screen, then branch to income, expenses, goals, budget set-up and blogs"
+        class="user-flow"
+        sizes="(min-width: 800px) 590px, 100vw"
+      />
+    </section>
+
+    <section class="container" aria-labelledby="logo">
+      <SectionTitle marker={marker} variant="bold" id="logo">Logo</SectionTitle>
+      <div class="logos">
+        <span class="wordmark lime-text">Pennie</span>
+        <span class="wordmark" aria-hidden="true">Pennie</span>
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="palette">
+      <SectionTitle marker={marker} variant="bold" id="palette">Color Palette</SectionTitle>
+      <p class="copy narrow">
+        I chose a clean, modern palette to enhance clarity and user engagement. #2C2C2C ensures strong text contrast, #FFFFFF
+        keeps the content readable, #D5EE74 highlights growth and savings, while #B94FE0 adds energy and motivates the user.
+      </p>
+      <ul class="palette">
+        {
+          palette.map((c) => (
+            <li>
+              <span class:list={['chip', { outline: c.outline }]} style={`background: ${c.hex}`} />
+              <span>{c.hex}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="container" aria-labelledby="typography">
+      <SectionTitle marker={marker} variant="bold" id="typography">Typography</SectionTitle>
+      <p class="copy narrow">
+        I chose Montserrat for its clean, modern style that improves readability and gives the app a simple, approachable
+        feel—ideal for a stress-free budgeting experience.
+      </p>
+      <div class="specimen">
+        <div>
+          <p class="family">Montserrat</p>
+          <p class="glyphs">
+            Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz
+            <br />
+            1234567890 .,;’!@#$%^&amp;*
+          </p>
+        </div>
+        <p class="aa1" aria-hidden="true">Aa1</p>
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="ui-kit">
+      <SectionTitle marker={marker} variant="bold" id="ui-kit">UI Kit</SectionTitle>
+      <div class="scroll-x" tabindex="0" role="region" aria-label="UI kit (scrolls sideways on small screens)">
+        <Img
+          src="pennie/ui-kit.jpg"
+          alt="UI kit: add button, dropdowns, password fields, calendar buttons, percentage bar, icons, arrows, selection buttons and navigation stepper states"
+          sizes="(min-width: 800px) 1200px, 800px"
+        />
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="lofi">
+      <SectionTitle marker={marker} variant="bold" id="lofi">Low Fidelity Prototype</SectionTitle>
+      <div class="pair">
+        <Img src="pennie/lofi-1.jpg" alt="Low fidelity wireframes: splash, sign in, sign up, menu, add expense, date picker, goals and add goal" sizes="(min-width: 800px) 50vw, 100vw" />
+        <Img src="pennie/lofi-2.jpg" alt="Low fidelity wireframes: home, add income, date and frequency pickers, goal type, blogs and article" sizes="(min-width: 800px) 50vw, 100vw" />
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="usability-1">
+      <SectionTitle marker={marker} variant="bold" id="usability-1">Usability Study</SectionTitle>
+      <p class="copy narrow">
+        I tested the interactive low-fidelity prototype with 3 participants to evaluate ease of use and navigation.
+      </p>
+      <h3 class="subhead">Insights</h3>
+      <ul class="bullets copy narrow">
+        <li>Users found it hard to move between pages since the only option was the top menu or the search option.</li>
+        <li>Navigation felt slow and unintuitive.</li>
+      </ul>
+      <h3 class="subhead">Improvements</h3>
+      <p class="copy narrow">
+        I added a bottom navigation bar with icons, making it easier to switch between pages quickly without relying on the
+        menu.
+      </p>
+    </section>
+
+    <section aria-labelledby="hifi">
+      <div class="container">
+        <SectionTitle marker={marker} variant="bold" id="hifi">High Fidelity Prototype</SectionTitle>
+      </div>
+      {
+        hifi.map((h) => (
+          <figure class="hifi">
+            <figcaption class="container subhead">{h.title}</figcaption>
+            <div class="bleed">
+              <Img src={h.src} alt={h.alt} sizes="100vw" />
+            </div>
+          </figure>
+        ))
+      }
+      <div class="bleed showcase">
+        <Img src="pennie/hifi-showcase.jpg" alt="Close-up of the Pennie home, add expense and goals screens" sizes="100vw" />
+      </div>
+    </section>
+
+    <section aria-labelledby="usability-2">
+      <div class="container">
+        <SectionTitle marker={marker} variant="bold" id="usability-2">Usability Study</SectionTitle>
+        <p class="copy narrow">
+          I tested my final prototype with participants to evaluate how user-friendly and accessible the app was for my
+          target audience.
+        </p>
+      </div>
+      <div class="bleed spaced">
+        <Img src="pennie/usability.jpg" alt="Pennie goals and budget screens on two phones standing on stone pedestals" sizes="100vw" />
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="insights">
+      <SectionTitle marker={marker} variant="bold" id="insights">Insights</SectionTitle>
+      <ul class="bullets copy narrow">
+        <li>Users found the interface clean and easy to understand.</li>
+        <li>Most were able to complete tasks like adding expenses, setting budgets, and viewing progress without help.</li>
+        <li>The new bottom navigation bar improved usability and made switching between pages effortless.</li>
+        <li>Overall, participants felt the app was helpful and motivating for managing their finances.</li>
+      </ul>
+    </section>
+
+    <section class="container" aria-labelledby="reflection">
+      <SectionTitle marker={marker} variant="bold" id="reflection">Final Reflection</SectionTitle>
+      <div class="copy narrow">
+        <p>
+          Designing Pennie was a fulfilling journey—from research to final design. I gained hands-on experience with new
+          tools and learned the importance of creating solutions that are both practical and emotionally supportive.
+        </p>
+        <p>
+          Despite some challenges, staying focused helped me grow as a designer. This project reminded me that understanding
+          real user needs is key to building meaningful, relatable experiences.
+        </p>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .case {
+    margin-top: clamp(40px, 6vw, 80px);
+  }
+
+  .narrow {
+    max-width: 1000px;
+  }
+
+  .indent {
+    padding-left: clamp(0px, 4.4vw, 56px);
+  }
+
+  .lime {
+    color: var(--lime);
+  }
+
+  /* Problem / solution with the hand-held phone on the right */
+  .problem {
+    display: grid;
+    grid-template-columns: minmax(0, 690fr) minmax(0, 560fr);
+    align-items: end;
+    gap: 24px;
+  }
+
+  .problem-text .copy {
+    max-width: 610px;
+    padding-left: clamp(0px, 4.6vw, 59px);
+    margin-bottom: clamp(48px, 6vw, 70px);
+  }
+
+  .problem-text .copy:last-child {
+    margin-bottom: 0;
+  }
+
+  .problem :global(.hand) {
+    margin-right: calc(-1 * var(--gutter));
+  }
+
+  .case :global(.competitors) {
+    margin: clamp(32px, 5vw, 60px) auto 0;
+  }
+
+  .case :global(.user-flow) {
+    margin-inline: auto;
+  }
+
+  .logos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px clamp(40px, 17vw, 220px);
+  }
+
+  .wordmark {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(3.5rem, 2rem + 5vw, 6rem);
+    line-height: 1.3;
+  }
+
+  .lime-text {
+    color: var(--lime);
+  }
+
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(16px, 3vw, 40px);
+    margin-top: clamp(40px, 6vw, 84px);
+    padding-left: 12px;
+    list-style: none;
+    text-align: center;
+    font-family: 'Roboto', var(--font-sans);
+    font-weight: 400;
+    font-size: clamp(1rem, 0.8rem + 1vw, 1.5rem);
+  }
+
+  .palette li {
+    display: grid;
+    gap: 30px;
+  }
+
+  .chip {
+    display: block;
+    aspect-ratio: 1;
+    border-radius: 20px;
+  }
+
+  .chip.outline {
+    border: 1px solid var(--white);
+  }
+
+  .specimen {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 24px;
+    margin-top: clamp(32px, 6vw, 80px);
+  }
+
+  .family {
+    font-weight: 700;
+    font-size: clamp(3rem, 1.5rem + 6vw, 6rem);
+    line-height: 1.1;
+  }
+
+  .glyphs {
+    max-width: 525px;
+    margin-top: clamp(24px, 4vw, 60px);
+    font-size: var(--fs-lead);
+    line-height: 1.67;
+    word-spacing: 0.15em;
+  }
+
+  .aa1 {
+    padding-right: clamp(0px, 8vw, 110px);
+    font-weight: 700;
+    font-size: clamp(6rem, 2rem + 17.5vw, 15.625rem);
+    line-height: 1;
+  }
+
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-inline: -15px;
+  }
+
+  .subhead {
+    margin: clamp(28px, 4vw, 44px) 0 16px;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem);
+    line-height: 1.25;
+  }
+
+  .bullets {
+    display: grid;
+    gap: 4px;
+    list-style: none;
+  }
+
+  .bullets li {
+    position: relative;
+    padding-left: 22px;
+  }
+
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--lime);
+  }
+
+  .hifi {
+    margin-top: clamp(32px, 4vw, 56px);
+  }
+
+  .hifi .subhead {
+    margin-top: 0;
+    margin-bottom: clamp(8px, 1.5vw, 20px);
+  }
+
+  .showcase,
+  .spaced {
+    margin-top: clamp(32px, 5vw, 60px);
+  }
+
+  .copy p + p {
+    margin-top: 0;
+  }
+
+  @media (max-width: 800px) {
+    .problem {
+      grid-template-columns: 1fr;
+    }
+
+    .problem-text .copy,
+    .indent {
+      padding-left: 0;
+    }
+
+    .problem :global(.hand) {
+      margin-right: 0;
+      justify-self: end;
+      width: 85%;
+    }
+
+    .palette {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      padding-left: 0;
+    }
+
+    .palette li {
+      gap: 14px;
+    }
+
+    .specimen {
+      grid-template-columns: 1fr;
+    }
+
+    .aa1 {
+      padding-right: 0;
+    }
+
+    .pair {
+      grid-template-columns: 1fr;
+      margin-inline: 0;
+    }
+
+    /* Keep the UI kit legible on phones: show it at tablet size and let it scroll sideways. */
+    .scroll-x {
+      overflow-x: auto;
+      margin-inline: calc(-1 * var(--gutter));
+      padding-inline: var(--gutter);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .scroll-x :global(img) {
+      width: 760px;
+      max-width: none;
+    }
+  }
+</style>

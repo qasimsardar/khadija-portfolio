@@ -1,0 +1,47 @@
+---
+interface Props {
+  marker: string;
+  as?: 'h2' | 'h3';
+  variant?: 'default' | 'bold';
+  id?: string;
+}
+
+const { marker, as: Tag = 'h2', variant = 'default', id } = Astro.props;
+---
+
+<Tag class:list={['section-title', variant]} id={id} style={`--marker: ${marker}`}>
+  <span class="marker" aria-hidden="true"></span>
+  <span><slot /></span>
+</Tag>
+
+<style>
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 2vw, 26px);
+    margin-bottom: clamp(28px, 4vw, 56px);
+    color: var(--page-fg);
+    font-weight: 600;
+    font-size: var(--fs-section);
+    line-height: 1.15;
+  }
+
+  .section-title.bold {
+    font-weight: 700;
+    font-size: clamp(1.75rem, 1.25rem + 1.7vw, 2.5rem);
+  }
+
+  .marker {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    background: var(--marker);
+  }
+
+  @media (max-width: 600px) {
+    .marker {
+      width: 18px;
+      height: 18px;
+    }
+  }
+</style>

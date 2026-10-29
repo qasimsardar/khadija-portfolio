@@ -1,0 +1,54 @@
+---
+interface Props {
+  src: string;
+  poster: string;
+  width: number;
+  height: number;
+  label: string;
+}
+
+const { src, poster, width, height, label } = Astro.props;
+---
+
+<video
+  class="lazy-video"
+  data-src={src}
+  poster={poster}
+  width={width}
+  height={height}
+  muted
+  loop
+  playsinline
+  preload="none"
+  aria-label={label}
+>
+</video>
+
+<script>
+  // Load the (large) video only when it nears the viewport, and pause it when off-screen.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const videos = document.querySelectorAll<HTMLVideoElement>('video.lazy-video');
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) {
+          if (!video.src) video.src = video.dataset.src!;
+          if (reduceMotion) video.controls = true;
+          else video.play().catch(() => (video.controls = true));
+        } else if (video.src) {
+          video.pause();
+        }
+      }
+    },
+    { rootMargin: '200px 0px' },
+  );
+  videos.forEach((v) => observer.observe(v));
+</script>
+
+<style>
+  .lazy-video {
+    width: 100%;
+    background: #0e0d10;
+  }
+</style>

@@ -1,0 +1,146 @@
+---
+import { Image } from 'astro:assets';
+import { asset } from '../lib/images';
+import { site, type Theme } from '../data/site';
+
+interface Props {
+  theme: Theme;
+}
+
+const { theme } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// As rendered in Figma: Home and About are Source Code Pro (About in Medium), Contact uses the Lora "Link 1" style.
+const links = [
+  { href: '/', label: 'Home', color: 'var(--tiffin)', font: 'mono' },
+  { href: '/#about', label: 'About', color: 'var(--ink)', font: 'mono-medium' },
+  { href: '#contact', label: 'Contact', color: 'var(--skillender)', font: 'label' },
+];
+---
+
+<header class:list={['site-nav', `on-${theme}`]}>
+  <div class="container inner">
+    <a class="brand" href="/" aria-label={`${site.name}, home`}>
+      <Image src={asset('home/avatar.png')} alt="" width={50} height={50} widths={[50, 100, 150]} sizes="50px" class="avatar" loading="eager" />
+      <span class="name">{site.name}</span>
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} class={l.font} style={`--link: ${l.color}`} aria-current={l.href === path ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    padding-block: 30px;
+  }
+
+  .inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    color: var(--page-fg);
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+
+  /* "Body" text style: Montserrat Regular 24 / 1.52 */
+  .name {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.52;
+    letter-spacing: var(--tracking-tight);
+    white-space: nowrap;
+  }
+
+  ul {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--link);
+    font-size: 16px;
+    line-height: 1.03;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  nav a.mono {
+    font-family: var(--font-mono);
+    font-weight: 400;
+  }
+
+  nav a.mono-medium {
+    font-family: var(--font-mono);
+    font-weight: 500;
+  }
+
+  nav a.label {
+    font-family: var(--font-label);
+    font-weight: 400;
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  .on-dark nav a {
+    color: var(--white);
+  }
+
+  .on-dark li:first-child a {
+    color: var(--lime);
+  }
+
+  @media (max-width: 480px) {
+    .site-nav {
+      padding-block: 20px;
+    }
+
+    .brand {
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+    }
+
+    .name {
+      font-size: 19px;
+    }
+
+    nav a {
+      font-size: 14px;
+    }
+
+    ul {
+      gap: 8px;
+    }
+  }
+</style>

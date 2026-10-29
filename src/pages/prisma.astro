@@ -1,0 +1,552 @@
+---
+import '@fontsource/source-sans-3/400.css';
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import LazyVideo from '../components/LazyVideo.astro';
+
+const marker = '#fce5d6';
+const pains = [
+  // The first description is set at 16px in the Figma file; the other two are 20px.
+  { title: 'Loud Music', text: 'Energetic music creates a loud environment', small: true },
+  { title: 'Increased Vocal Effort', text: 'Repeated shouting can lead to vocal fatigue and discomfort' },
+  { title: 'Voice Strain', text: 'Instructors have to speak louder to be heard over the music' },
+];
+const sources = [
+  { title: 'Surveys', text: 'User preferences and behaviors', tone: 'lilac' },
+  { title: 'Reddit', text: 'Real-world experiences', tone: 'peach' },
+  { title: 'Instructor Insights', text: 'First-hand observations', tone: 'lilac' },
+];
+const needs = [
+  { icon: 'prisma/icon-sound.png', label: 'Clear, Powerful Sound' },
+  { icon: 'prisma/icon-mic.png', label: 'Audible Instructions' },
+  { icon: 'prisma/icon-portable.png', label: 'Portability' },
+  { icon: 'prisma/icon-controls.png', label: 'Less Manual Adjustment' },
+  { icon: 'prisma/icon-battery.png', label: 'Long Battery Life' },
+];
+const swatches = ['#434B9F', '#DD1886', '#AC4396', '#7D4C9E', '#3E82C4'];
+const protoAlts = [
+  'Printed speaker housing panels and handle laid out on a workbench',
+  'Handle frame and perforated speaker shell before assembly',
+  'Speaker end cap next to a can of Krylon Fusion satin black spray paint',
+  'Sewing the speaker mesh cover on a sewing machine',
+  'Fitting the circuit board and speaker drivers into the housing',
+  'Battery pack and two speaker drivers mounted in their enclosures',
+  'Testing the LED strip inside the translucent handle frame',
+  'Spray-painting the mesh cover',
+  'Mesh cover wrapped over the triangular speaker body',
+  'Speaker body fully covered in black mesh',
+  'Wiring the electronics into the speaker shell',
+  'Electronics, battery and drivers assembled inside the housing',
+];
+const gallerySmall = {
+  left: [
+    { src: 'prisma/final-l1.jpg', alt: 'Final Prisma prototype in black with a white frame, front three-quarter view' },
+    { src: 'prisma/final-l2.jpg', alt: 'Final Prisma prototype seen from the end cap with its handle' },
+    { src: 'prisma/final-l3.jpg', alt: 'Final Prisma prototype standing upright on its triangular end' },
+  ],
+  right: [
+    { src: 'prisma/final-r1.jpg', alt: 'Prisma prototype lit with RGB LEDs on a blue backdrop' },
+    { src: 'prisma/final-r2.jpg', alt: 'Underside of the Prisma prototype glowing with RGB light' },
+    { src: 'prisma/final-r3.jpg', alt: 'Prisma prototype end view with LEDs glowing' },
+  ],
+};
+---
+
+<Base
+  title="Prisma"
+  theme="cream"
+  description="PRISMA is a portable, multifunctional speaker for fitness and dance instructors, combining powerful sound, customizable RGB lighting and hands-free voice amplification."
+>
+  <div class="hero bleed">
+    <Img src="prisma/hero.jpg" alt="Two Prisma speakers with RGB-lit edges in front of large glowing PRISMA lettering" sizes="100vw" eager />
+  </div>
+
+  <div class="case">
+    <section class="container" aria-labelledby="research">
+      <div class="research">
+        <div class="research-text">
+          <SectionTitle marker={marker} id="research">User Research</SectionTitle>
+          <p class="copy">
+            <strong>Zumba instructors</strong> lead energetic group classes, using <strong>music</strong> to <strong>motivate</strong>
+            participants while giving <strong>verbal instructions</strong>. They <strong>constantly move</strong> and demonstrate
+            exercises, often needing <strong>portable audio equipment</strong> and <strong>clear voice projection.</strong>
+          </p>
+        </div>
+        <Img
+          src="prisma/research-instructor.jpg"
+          alt="Sketch of a dance instructor wearing a headset microphone, leading a class"
+          sizes="(min-width: 1280px) 852px, (min-width: 800px) 67vw, 100vw"
+        />
+      </div>
+      <Img
+        src="prisma/research-flow.jpg"
+        alt="Sketches showing a loud speaker, an instructor shouting over it, and resulting voice strain"
+        class="flow"
+      />
+      <ol class="pains">
+        {
+          pains.map((p, i) => (
+            <li>
+              <span class="num" aria-hidden="true">
+                {i + 1}
+              </span>
+              <p>
+                <strong>{p.title}</strong>
+                <br />
+                <span class:list={{ small: p.small }}>{p.text}</span>
+              </p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section class="container" aria-labelledby="insights">
+      <SectionTitle marker={marker} id="insights">Key Insights</SectionTitle>
+      <ul class="venn" aria-label="Research sources">
+        {
+          sources.map((s) => (
+            <li class={s.tone}>
+              <strong>{s.title}</strong>
+              <span>{s.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="needs" aria-label="What instructors need">
+        {
+          needs.map((n) => (
+            <li>
+              <Img src={n.icon} alt="" sizes="67px" />
+              <span>{n.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="container stack" aria-labelledby="ideation">
+      <SectionTitle marker={marker} id="ideation">Ideation</SectionTitle>
+      <Img src="prisma/ideation.jpg" alt="Sheet of concept sketches exploring many portable speaker forms" />
+      <Img src="prisma/ideation-handles.jpg" alt="Refined sketches of the triangular speaker with its handle" />
+    </section>
+
+    <section class="container" aria-labelledby="branding">
+      <SectionTitle marker={marker} id="branding">Branding</SectionTitle>
+      <div class="brand">
+        <Img src="prisma/logo.jpg" alt="Prisma logo with the tagline Protect your voice. Amplify the fun" class="logo" sizes="380px" />
+        <ul class="swatches" aria-label="Color palette">
+          {
+            swatches.map((c) => (
+              <li>
+                <span class="dot" style={`background: ${c}`} />
+                <span>{c.slice(1)}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <div class="type">
+          <figure>
+            <span class="aa" aria-hidden="true">Aa</span>
+            <figcaption>Montserrat</figcaption>
+          </figure>
+          <figure class="sans3">
+            <span class="aa" aria-hidden="true">Aa</span>
+            <figcaption>Source Sans 3</figcaption>
+          </figure>
+        </div>
+        <Img src="prisma/moodboard.jpg" alt="Prisma moodboard: disco ball, marble sculpture, dancers, cassette tapes and neon light" class="moodboard" />
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="cad">
+      <SectionTitle marker={marker} id="cad">CAD</SectionTitle>
+      <Img src="prisma/cad.png" alt="CAD renders of the speaker: three-quarter view with handle, top view and both triangular end caps" />
+    </section>
+
+    <section class="container" aria-labelledby="proto">
+      <SectionTitle marker={marker} id="proto">Proto</SectionTitle>
+      <ul class="grid-photos cols-4">
+        {
+          protoAlts.map((alt, i) => (
+            <li>
+              <Img src={`prisma/proto-${String(i + 1).padStart(2, '0')}.jpg`} alt={alt} sizes="(min-width: 1280px) 285px, (min-width: 800px) 23vw, 50vw" />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="container" aria-labelledby="final">
+      <SectionTitle marker={marker} id="final">Final Functional Prototype</SectionTitle>
+      <div class="gallery">
+        <div class="side">
+          {gallerySmall.left.map((g) => <Img src={g.src} alt={g.alt} sizes="(min-width: 1280px) 180px, 30vw" />)}
+        </div>
+        <Img
+          src="prisma/final-main.jpg"
+          alt="Prisma prototype glowing with RGB light against a purple backdrop"
+          class="main"
+          sizes="(min-width: 1280px) 760px, (min-width: 800px) 60vw, 100vw"
+        />
+        <div class="side">
+          {gallerySmall.right.map((g) => <Img src={g.src} alt={g.alt} sizes="(min-width: 1280px) 180px, 30vw" />)}
+        </div>
+      </div>
+      <div class="explode">
+        <Img src="prisma/render.jpg" alt="Render of Prisma with its handle up and RGB light strip" sizes="(min-width: 1280px) 431px, 36vw" />
+        <Img src="prisma/exploded.jpg" alt="Exploded view of Prisma showing handle, mesh, frame, LED strip, drivers, battery and circuit board" sizes="(min-width: 1280px) 765px, 64vw" />
+      </div>
+    </section>
+
+    <section class="container" aria-labelledby="packaging">
+      <SectionTitle marker={marker} id="packaging">Packaging</SectionTitle>
+      <Img src="prisma/packaging.jpg" alt="Prisma packaging: flat dieline, kraft sleeve, printed box and the speaker inside its packaging" />
+    </section>
+
+    <section aria-labelledby="app">
+      <div class="container">
+        <SectionTitle marker={marker} id="app">App Design</SectionTitle>
+      </div>
+      <div class="bleed">
+        <Img src="prisma/app.jpg" alt="Prisma companion app screens for speaker connection, lighting and music playback" sizes="100vw" />
+      </div>
+      <div class="container video">
+        <LazyVideo
+          src="/video/prisma.mp4"
+          poster="/video/prisma-poster.jpg"
+          width={1280}
+          height={609}
+          label="Prisma product video"
+        />
+      </div>
+    </section>
+
+    <section class="bleed studio" aria-label="Prisma in use">
+      <Img src="prisma/studio.jpg" alt="Prisma speaker glowing on the floor of a dance studio during a class" sizes="100vw" />
+    </section>
+  </div>
+</Base>
+
+<style>
+  .hero {
+    margin-top: clamp(0px, 5vw, 72px);
+  }
+
+  .case {
+    margin-top: var(--section-gap);
+  }
+
+  /* User research */
+  .research {
+    display: grid;
+    grid-template-columns: minmax(0, 335fr) minmax(0, 852fr);
+    gap: clamp(24px, 3vw, 40px);
+  }
+
+  .research-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .research-text .copy {
+    padding-bottom: 20px;
+  }
+
+  .research + :global(.flow) {
+    margin-top: clamp(32px, 5vw, 60px);
+  }
+
+  .pains {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px clamp(24px, 4vw, 60px);
+    margin-top: 40px;
+    padding: 0;
+    list-style: none;
+    color: var(--text);
+  }
+
+  .pains li {
+    display: flex;
+    gap: clamp(16px, 3.5vw, 50px);
+  }
+
+  .pains .num {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 50%;
+    background: #fde9e0;
+    font-weight: 600;
+  }
+
+  .pains strong {
+    font-weight: 600;
+  }
+
+  .pains .small {
+    font-size: 16px;
+  }
+
+  /* Key insights: three overlapping circles */
+  .venn {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0 clamp(40px, 8vw, 110px);
+    list-style: none;
+    color: var(--text);
+  }
+
+  .venn li {
+    --size: clamp(150px, 26vw, 284px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: var(--size);
+    height: var(--size);
+    padding: calc(var(--size) * 0.1);
+    border-radius: 50%;
+    text-align: center;
+    font-size: clamp(0.8125rem, 0.6rem + 0.9vw, 1.25rem);
+    line-height: 1.5;
+  }
+
+  .venn li + li {
+    margin-left: calc(var(--size) * -0.145);
+  }
+
+  .venn .lilac {
+    background: #ede7f1;
+  }
+
+  .venn .peach {
+    background: #fce5d6;
+  }
+
+  .venn strong {
+    font-weight: 600;
+  }
+
+  .needs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 24px 16px;
+    padding: clamp(28px, 5vw, 62px) clamp(16px, 2vw, 24px) clamp(28px, 3.4vw, 44px);
+    border: 1px solid #979797;
+    border-radius: 33px;
+    list-style: none;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .needs li {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 20px;
+  }
+
+  .needs :global(img) {
+    width: 67px;
+  }
+
+  /* Branding */
+  .brand {
+    display: grid;
+    justify-items: center;
+    gap: clamp(28px, 4vw, 40px);
+  }
+
+  .brand :global(.logo) {
+    width: min(380px, 80%);
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+    width: 100%;
+    list-style: none;
+    color: var(--text);
+    font-size: clamp(0.9375rem, 0.7rem + 1vw, 1.5rem);
+    text-align: center;
+  }
+
+  .swatches li {
+    display: grid;
+    justify-items: center;
+    gap: 22px;
+  }
+
+  .dot {
+    display: block;
+    width: min(133px, 100%);
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+
+  .type {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .type figure {
+    display: grid;
+    justify-items: center;
+  }
+
+  .aa {
+    font-size: clamp(4.5rem, 2.5rem + 7vw, 8rem);
+    line-height: 1;
+  }
+
+  .type figcaption {
+    margin-top: 12px;
+    font-size: clamp(1.0625rem, 0.9rem + 0.75vw, 1.5rem);
+  }
+
+  .sans3 {
+    font-family: 'Source Sans 3', sans-serif;
+  }
+
+  .brand :global(.moodboard) {
+    width: 100%;
+    margin-top: clamp(20px, 3vw, 40px);
+    border-radius: clamp(16px, 2.8vw, 35px);
+  }
+
+  /* Photo grids */
+  .grid-photos {
+    display: grid;
+    gap: 15px;
+    list-style: none;
+  }
+
+  .cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .grid-photos :global(img) {
+    width: 100%;
+    border-radius: 20px;
+  }
+
+  /* Final prototype gallery: small stacks either side of the hero shot */
+  .gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 180fr) minmax(0, 759fr) minmax(0, 178fr);
+    gap: clamp(8px, 1.2vw, 16px);
+    align-items: start;
+    padding-inline: clamp(0px, 1vw, 12px);
+  }
+
+  .side {
+    display: grid;
+    gap: clamp(8px, 1.1vw, 14px);
+  }
+
+  .gallery :global(img) {
+    width: 100%;
+  }
+
+  .explode {
+    display: grid;
+    grid-template-columns: minmax(0, 431fr) minmax(0, 765fr);
+    align-items: center;
+    gap: 8px;
+    margin-top: clamp(32px, 5vw, 70px);
+  }
+
+  .video {
+    margin-top: clamp(32px, 5vw, 70px);
+  }
+
+  .studio {
+    margin-top: clamp(40px, 3vw, 40px);
+  }
+
+  @media (max-width: 800px) {
+    .research {
+      grid-template-columns: 1fr;
+    }
+
+    .research-text .copy {
+      padding-bottom: 0;
+    }
+
+    .pains {
+      grid-template-columns: 1fr;
+    }
+
+    .needs {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      row-gap: 32px;
+    }
+
+    .swatches {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .swatches li {
+      gap: 10px;
+    }
+
+    .cols-4 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .grid-photos :global(img) {
+      border-radius: 14px;
+    }
+
+    /* Hero shot on top, the six detail shots in a 3-column grid below. */
+    .gallery {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      padding-inline: 0;
+    }
+
+    .gallery :global(.main) {
+      grid-column: 1 / -1;
+      order: -1;
+    }
+
+    .side {
+      display: contents;
+    }
+
+    .explode {
+      grid-template-columns: 1fr;
+    }
+
+    .explode :global(img:first-child) {
+      width: 70%;
+      justify-self: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .needs {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .cols-4 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .swatches {
+      font-size: 0.6875rem;
+    }
+  }
+</style>

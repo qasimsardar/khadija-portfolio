@@ -1,0 +1,89 @@
+---
+import { site, type Theme } from '../data/site';
+
+interface Props {
+  theme: Theme;
+}
+
+const { theme } = Astro.props;
+const links = [
+  { label: 'Email', href: site.contact.email, color: 'var(--tiffin)', dark: 'var(--lime)' },
+  { label: 'Behance', href: site.contact.behance, color: 'var(--skillender)', dark: 'var(--violet)' },
+  { label: 'LinkedIn', href: site.contact.linkedin, color: 'var(--prisma)', dark: 'var(--white)' },
+];
+const year = new Date().getFullYear();
+---
+
+<footer id="contact" class:list={['site-footer', `on-${theme}`]}>
+  <div class="container">
+    <ul class="links">
+      {
+        links.map((l) => (
+          <li style={`--link: ${theme === 'dark' ? l.dark : l.color}`}>
+            {l.href ? (
+              <a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener">
+                {l.label}
+              </a>
+            ) : (
+              <span>{l.label}</span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+    <p class="legal">© {site.name} {year} All Rights Reserved</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--section-gap);
+    padding-bottom: clamp(48px, 6vw, 80px);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px 32px;
+    padding-top: 30px;
+    padding-bottom: clamp(56px, 10vw, 150px);
+    border-top: 1px solid #4f4f4f;
+    list-style: none;
+  }
+
+  /* "Heading" text style: Montserrat Light 50 / 1.2 */
+  .links a,
+  .links span {
+    color: var(--link);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: clamp(2rem, 1.3rem + 2.8vw, 3.125rem);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-tight);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+  }
+
+  .links a:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .legal {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: clamp(1.25rem, 0.8rem + 3vw, 3.125rem);
+    line-height: 1.2;
+    letter-spacing: var(--tracking-tight);
+  }
+
+  .on-dark .links {
+    border-top-color: rgba(255, 255, 255, 0.35);
+  }
+
+  @media (max-width: 600px) {
+    .links {
+      flex-direction: column;
+    }
+  }
+</style>
