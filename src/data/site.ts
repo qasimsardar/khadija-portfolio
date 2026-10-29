@@ -15,13 +15,22 @@ export const site = {
   // "View full competitive audit here." on the Pennie case study.
   pennieAuditUrl: '',
   about: {
-    statement: 'I’m dedicated to crafting meaningful visual experiences through a multidisciplinary design approach.',
-    // Disciplines taken from the sections of her own case studies.
-    skills: ['User Research', 'Ideation & Sketching', 'CAD', 'Prototyping', 'Branding', 'Packaging', 'UI/UX Design', 'Usability Testing'],
-    // Not in the Figma file yet. Each block appears on the site once it has content.
-    bio: '',
-    tools: [] as string[],
+    statement: 'My design perspective is shaped by the people I meet, the places I learn, and the things I make.',
+    skills: ['User Research', 'Human-Centered Design', 'Ideation', 'Prototyping', 'Branding', 'Packaging', 'UI/UX Design', 'Usability Testing'],
+    bio: 'I’m an industrial design student drawn to people-centered problems and ideas you can hold in your hands. My path began with three semesters at NUST in Pakistan, took me to METU in Türkiye as an exchange student, and brought me to Iowa State after transferring to the U.S. Each place has added a new perspective to how I design.',
+    tools: ['Onshape', 'Fusion', 'KeyShot', 'Rhino', 'Figma', 'Illustrator', 'Photoshop'],
     education: [] as { school: string; detail: string }[],
+    journey: [
+      { place: 'Pakistan', school: 'NUST · Islamabad', detail: 'Industrial Design · 3 semesters', dates: '2022 — 2024', mark: '01' },
+      { place: 'Türkiye', school: 'METU · Ankara', detail: 'Exchange student · selected 1 of 4 from Pakistan', dates: 'Spring 2024', mark: '02' },
+      { place: 'United States', school: 'Iowa State · Ames, Iowa', detail: 'Transferred to complete a B.I.D. in Industrial Design', dates: 'Expected 2027', mark: '03' },
+    ],
+    experience: [
+      { role: 'Undergraduate Research Assistant', place: 'Iowa State · 2026—now', detail: 'Human-centered and pediatric assistive-device research; co-authored a faculty-mentored paper and designed a book frame now used in clinics.' },
+      { role: 'UX & Brand Designer', place: 'Independent · 2024—now', detail: 'Creating identities, websites, and digital experiences for small-business clients.' },
+      { role: 'Summer Assistant', place: 'ISU Extension & Outreach · 2026', detail: 'Supported 4-H youth and community programming.' },
+    ],
+    recognition: ['Iowa State Dean’s List · 2025—now', 'NUST High Achiever List · 2024', 'Google UX Design Certificate', 'CITI Social & Behavioral Research Certificate'],
   },
 };
 

@@ -15,6 +15,7 @@ import work from './pages/work';
 import prisma from './pages/prisma';
 import tiffin from './pages/tiffin';
 import pennie from './pages/pennie';
+import personal from './pages/personal';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -32,7 +33,7 @@ export interface MotionCtx {
 }
 
 type PageModule = (ctx: MotionCtx) => void;
-const pages: Record<string, PageModule> = { home, work, prisma, tiffin, pennie };
+const pages: Record<string, PageModule> = { home, work, prisma, tiffin, pennie, personal };
 
 declare global {
   interface Window {

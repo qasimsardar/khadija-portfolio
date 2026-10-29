@@ -10,6 +10,24 @@ const PAPER = { bg: '#fefbf4', ink: '#141414', muted: '#4b4741' };
 export default function home(ctx: MotionCtx) {
   const { reduced } = ctx;
 
+  const journey = document.querySelector<HTMLElement>('[data-journey]');
+  const journeySteps = journey?.querySelectorAll<HTMLElement>('[data-journey-step]');
+  const journeyLine = journey?.querySelector<HTMLElement>('[data-journey-line]');
+  const verticalJourney = matchMedia('(max-width: 720px)').matches;
+  if (journey && journeySteps?.length && !reduced) {
+    gsap.set(journeySteps, { autoAlpha: 0, y: 28 });
+    if (journeyLine) gsap.set(journeyLine, verticalJourney
+      ? { scaleY: 0, transformOrigin: 'center top' }
+      : { scaleX: 0, transformOrigin: 'left center' });
+    const journeyTimeline = gsap.timeline({
+      scrollTrigger: { trigger: journey, start: 'top 76%', toggleActions: 'play none none none' },
+    });
+    if (journeyLine) journeyTimeline.to(journeyLine, verticalJourney
+      ? { scaleY: 1, duration: 1.1, ease: EASE.inOut }
+      : { scaleX: 1, duration: 1.1, ease: EASE.inOut }, 0);
+    journeyTimeline.to(journeySteps, { autoAlpha: 1, y: 0, duration: DUR.l, ease: EASE.out, stagger: 0.18 }, 0.12);
+  }
+
   // Role line types itself in after the intro.
   const role = document.querySelector<HTMLElement>('[data-typed]');
   if (role && !reduced) {

@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import { personalCollections } from '../data/personal';
+
+const instagram = 'https://www.instagram.com/k.for.kreative/';
+const collections = personalCollections.map((collection) => ({
+  ...collection,
+  slides: [
+    collection.images.find((image) => image.src === collection.cover) ?? collection.images[0],
+    ...collection.images.filter((image) => image.src !== collection.cover),
+  ],
+}));
+---
+
+<Base
+  page="personal"
+  title="Personal"
+  description="Away from the desk: Khadija’s doodling, mandala art, calligraphy and handmade greeting cards."
+  ogImage="personal/doodling/doodling-02.jpg"
+  accent="#b94fe0"
+>
+  <section class="intro container-wide" aria-labelledby="page-title">
+    <div class="intro-top label"><span>Personal</span><span>A little life beyond the studio · 01—04</span></div>
+    <div class="intro-main">
+      <h1 id="page-title" class="title" data-split="intro">Away from<span>the desk.</span></h1>
+      <p class="lead intro-copy" data-reveal>I love doodling, making mandala art, practicing calligraphy, and turning paper into handmade greeting cards. This is my collection of happy little side quests.</p>
+    </div>
+    <div class="intro-bottom label"><span>Made by hand, kept with love</span><a href={instagram} target="_blank" rel="noopener noreferrer">@k.for.kreative ↗</a></div>
+  </section>
+
+  <section class="gallery container-wide" aria-label="Doodling, mandala art, calligraphy and handmade cards" data-personal-collage>
+    <div class="gallery-stage">
+      {collections.map((collection, i) => (
+        <figure class:list={['gallery-card', `gallery-card--${i + 1}`]} style={`--card-turn:${[-14, -6, 6, 14][i]}deg`} data-personal-card>
+          <div class="image-wrap" data-category-frame>
+            {collection.slides.map((image, imageIndex) => (
+              <Img
+                src={image.src}
+                alt={`Khadija’s ${collection.name.toLowerCase()}: ${image.caption}`}
+                sizes="(min-width: 900px) 28vw, 72vw"
+                eager={imageIndex === 0}
+                aria-hidden={imageIndex !== 0}
+                data-category-image=""
+              />
+            ))}
+          </div>
+          <figcaption><span class="label">0{i + 1}</span><span>{collection.name}</span></figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="milestone container-wide" aria-label="Handmade greeting card milestone">
+    <div class="milestone-copy"><p class="label">Made to be shared</p><p>I made and sold over 200 handmade greeting cards at a local grocery store.</p></div>
+    <p class="milestone-count" aria-label="Over 200"><span>200</span><sup>+</sup></p>
+  </section>
+</Base>
+
+<style>
+  .intro { padding-top:clamp(132px,18vh,208px); }
+  .intro-top,.intro-bottom { display:flex; align-items:center; justify-content:space-between; gap:20px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.09em; }
+  .intro-top span:first-child { color:var(--ink); }
+  .intro-main { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(240px,.75fr); align-items:end; gap:clamp(32px,7vw,110px); padding-block:clamp(48px,8vw,108px) clamp(54px,8vw,108px); }
+  .title { display:flex; flex-wrap:wrap; align-items:baseline; gap:0 .18em; font-size:var(--fs-mega); font-weight:300; line-height:.98; letter-spacing:var(--tracking-display); }
+  .title span { color:var(--violet); font-family:var(--font-accent); font-size:.77em; font-style:italic; letter-spacing:-.075em; }
+  .intro-copy { max-width:34rem; padding-bottom:.3em; color:var(--ink-2); }
+  .intro-bottom { padding-block:18px; border-top:1px solid var(--line); }
+  .intro-bottom a { color:var(--ink); }
+  .gallery { padding-block:clamp(26px,4vw,56px) clamp(34px,5vw,68px); }
+  .gallery-stage { position:relative; min-height:clamp(310px,37vw,490px); max-width:1120px; margin-inline:auto; }
+  .gallery-card { position:absolute; top:7%; width:29%; padding:8px 8px 0; background:var(--paper); box-shadow:0 18px 44px rgb(20 20 20 / 14%); transform:rotate(var(--card-turn)); transform-origin:center center; transition:box-shadow .45s var(--ease-out); }
+  .gallery-card--1 { left:2%; top:23%; }
+  .gallery-card--2 { left:24%; top:6%; }
+  .gallery-card--3 { left:47%; top:6%; }
+  .gallery-card--4 { left:69%; top:23%; }
+  .image-wrap { position:relative; overflow:hidden; aspect-ratio:1.16; background:var(--paper-2); }
+  .image-wrap picture { position:absolute; inset:0; display:block; opacity:0; }
+  .image-wrap picture:first-child { opacity:1; }
+  .image-wrap img { display:block; width:100%; height:100%; object-fit:cover; transition:transform .55s var(--ease-out); }
+  .gallery-card figcaption { display:flex; align-items:center; gap:12px; padding:13px 6px 15px; font-size:var(--fs-small); }
+  .gallery-card figcaption .label { color:var(--ink-3); }
+  .gallery-card:hover { z-index:5; box-shadow:0 24px 54px rgb(20 20 20 / 22%); }
+  .gallery-card:hover .image-wrap img { transform:scale(1.055); }
+  .milestone { display:flex; align-items:center; justify-content:space-between; gap:32px; margin-bottom:clamp(78px,10vw,136px); padding-block:22px; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .milestone-copy .label { margin-bottom:8px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.09em; }
+  .milestone-copy > p:last-child { color:var(--ink-2); }
+  .milestone-count { color:var(--tiffin); font-size:clamp(3.5rem,8vw,7rem); font-weight:300; line-height:.8; letter-spacing:-.1em; white-space:nowrap; }
+  .milestone-count sup { position:relative; top:-.28em; padding-left:.08em; font-family:var(--font-accent); font-size:.48em; font-style:italic; letter-spacing:-.05em; }
+  @media(max-width:720px) {
+    .intro-main { grid-template-columns:1fr; gap:24px; }
+    .gallery-stage { min-height:clamp(260px,58vw,390px); }
+    .gallery-card { width:34%; padding:6px 6px 0; }
+    .gallery-card--1 { left:0; top:22%; }
+    .gallery-card--2 { left:21%; top:4%; }
+    .gallery-card--3 { left:44%; top:4%; }
+    .gallery-card--4 { left:66%; top:22%; }
+    .gallery-card figcaption { gap:7px; padding:9px 3px 11px; font-size:11px; }
+  }
+  @media(max-width:480px) {
+    .intro-top,.intro-bottom { align-items:flex-start; font-size:10px; }
+    .intro-top span:last-child { text-align:right; }
+    .title { font-size:clamp(4rem,18vw,6rem); }
+    .gallery-stage { min-height:320px; }
+    .gallery-card { width:46%; }
+    .gallery-card--1 { left:0; top:22%; }
+    .gallery-card--2 { left:24%; top:2%; }
+    .gallery-card--3 { left:38%; top:39%; }
+    .gallery-card--4 { left:54%; top:16%; }
+    .gallery-card figcaption { font-size:10px; }
+    .milestone { gap:14px; }
+    .milestone-copy > p:last-child { max-width:28ch; font-size:var(--fs-small); }
+    .milestone-count { font-size:clamp(3rem,16vw,5rem); }
+  }
+</style>
