@@ -2,8 +2,14 @@
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
 import SectionTitle from '../components/SectionTitle.astro';
+import CaseHero from '../components/case/CaseHero.astro';
+import MetaStrip from '../components/case/MetaStrip.astro';
+import NextProject from '../components/case/NextProject.astro';
+import { projects } from '../data/projects';
 
-const marker = '#a76e61';
+const project = projects.find((p) => p.slug === 'tiffin')!;
+// Coral from the product, with brass and brushed-steel details.
+const marker = '#e96b4d';
 const insights = [
   { icon: 'rice-bowl', text: 'Rich Culture of homemade meals' },
   { icon: 'wheat', text: 'Staple foods include rice, flatbreads, curries and vegetables' },
@@ -26,27 +32,49 @@ const manufacturing = [
   'Lid resting above the empty white base',
   'Separate tray and container parts laid out',
 ];
+const fullBleed = [
+  { id: 'colors', title: 'Colors', src: 'tiffin/colors.jpg', alt: 'The tiffin in coral, forest green and slate blue on matching pedestals' },
+  {
+    id: 'materials',
+    title: 'Materials',
+    src: 'tiffin/materials.jpg',
+    alt: 'Exploded parts labelled with materials: polypropylene lid, base and plate, expanded polypropylene layers, stainless steel plate and containers, silicone lids, metal hinge and rubber handle',
+  },
+  {
+    id: 'sale-sheet',
+    title: 'Product Sale Sheet',
+    src: 'tiffin/sale-sheet.jpg',
+    alt: 'Sale sheet: key features, specifications, estimated unit cost PKR 2990–3610 and suggested retail price PKR 4500',
+  },
+];
 ---
 
 <Base
+  page="tiffin"
   title="Tiffin"
-  theme="cream"
+  accent={project.accent}
+  progress
+  ogImage="tiffin/hero.jpg"
   description="TIFFIN (SAATH) is a modern commuter food carrier inspired by Lahore’s food culture, celebrating the tradition of sharing homemade meals."
 >
-  <div class="hero bleed">
-    <Img src="tiffin/hero.jpg" alt="Coral SAATH tiffin lunchbox open with rice and four containers, beside the SAATH and tiffin logos" sizes="100vw" eager />
-  </div>
+  <CaseHero project={project}>
+    <div slot="overlay" class="steam" aria-hidden="true">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </CaseHero>
+  <MetaStrip project={project} />
 
   <div class="case">
     <section class="container" aria-labelledby="regional">
-      <SectionTitle marker="rgba(138, 63, 48, 0.75)" id="regional">Regional and City Analysis</SectionTitle>
-      <Img
-        src="tiffin/regional.jpg"
-        alt="Collage map of South Asia with Lahore’s Badshahi Mosque, city traffic and traditional food"
-        class="regional"
-        sizes="(min-width: 1280px) 969px, 100vw"
-      />
-      <ul class="insights">
+      <SectionTitle marker={marker} id="regional">Regional and City Analysis</SectionTitle>
+      <div class="regional" data-reveal>
+        <Img
+          src="tiffin/regional.png"
+          alt="Collage map of South Asia with Lahore’s Badshahi Mosque, city traffic and traditional food"
+          sizes="(min-width: 1280px) 969px, 100vw"
+        />
+      </div>
+      <ul class="insights" data-deal>
         {
           insights.map((i) => (
             <li>
@@ -62,12 +90,12 @@ const manufacturing = [
 
     <section class="container" aria-labelledby="moodboard">
       <SectionTitle marker={marker} id="moodboard">Lahore’s Moodboard</SectionTitle>
-      <Img
-        src="tiffin/moodboard.jpg"
-        alt="Moodboard of Lahore street life, clay pots, truck art, biryani, chaat and Mughal architecture"
-        class="moodboard"
-      />
-      <p class="hmw">
+      <div class="moodboard" data-moodboard data-cursor="Lahore">
+        <div class="moodboard-media" data-moodboard-media>
+          <Img src="tiffin/moodboard.jpg" alt="Moodboard of Lahore street life, clay pots, truck art, biryani, chaat and Mughal architecture" />
+        </div>
+      </div>
+      <p class="hmw" data-reveal>
         Young professionals in Lahore find comfort and connection in homemade food, but <strong>hygiene concerns can make
         sharing difficult</strong>. How might we help them share meals hygienically while preserving the <strong>nostalgia and
         togetherness of home</strong>?
@@ -76,24 +104,25 @@ const manufacturing = [
 
     <section class="container" aria-labelledby="ideation">
       <SectionTitle marker={marker} id="ideation">Ideation</SectionTitle>
-      <Img src="tiffin/ideation.jpg" alt="Concept sketches of stacking and compartmented round lunchbox designs" />
+      <div data-reveal><Img src="tiffin/ideation.png" alt="Concept sketches of stacking and compartmented round lunchbox designs" /></div>
     </section>
 
     <section class="container" aria-labelledby="concept">
       <SectionTitle marker={marker} id="concept">Final Concept</SectionTitle>
-      <Img
-        src="tiffin/final-concept.jpg"
-        alt="Sketch of the final concept: exploded stack of lid, containers and tray next to the closed lunchbox"
-        class="concept"
-        sizes="(min-width: 1280px) 898px, 100vw"
-      />
+      <div class="concept" data-reveal>
+        <Img
+          src="tiffin/final-concept.jpg"
+          alt="Sketch of the final concept: exploded stack of lid, containers and tray next to the closed lunchbox"
+          sizes="(min-width: 1280px) 898px, 100vw"
+        />
+      </div>
     </section>
 
     <section aria-labelledby="branding">
       <div class="container">
         <SectionTitle marker={marker} id="branding">Branding</SectionTitle>
       </div>
-      <div class="bleed">
+      <div class="bleed" data-reveal="clip">
         <Img
           src="tiffin/branding.jpg"
           alt="Brand sheet: tiffin and SAATH logos in four colors, TT Norms and Palatino Arabic type, and a six-color palette"
@@ -104,10 +133,13 @@ const manufacturing = [
 
     <section class="container" aria-labelledby="projection">
       <SectionTitle marker={marker} id="projection">Company Projection</SectionTitle>
-      <div class="projection">
-        <Img src="tiffin/saath-logo.png" alt="SAATH by tiffin logo" class="saath" sizes="294px" />
-        <p>
-          <strong>SAATH</strong> means <strong>“togetherness”</strong> in Urdu and celebrates the <strong>joy of sharing homemade
+      <div class="projection" data-saath>
+        <!-- Urdu reads right to left, so the logo draws in from the right. -->
+        <div class="saath" data-saath-logo>
+          <Img src="tiffin/saath-logo.png" alt="SAATH by tiffin logo" sizes="294px" />
+        </div>
+        <p class="saath-copy" data-reveal>
+          <strong data-saath-word>SAATH</strong> means <strong>“togetherness”</strong> in Urdu and celebrates the <strong>joy of sharing homemade
           food</strong>. Inspired by Lahore’s food culture, it brings a <strong class="semi">little piece of home wherever you go</strong>
           through a <strong>thoughtful, reusable design</strong> that encourages <strong>connection</strong> and
           <strong>sustainability</strong>.
@@ -117,16 +149,18 @@ const manufacturing = [
 
     <section class="container" aria-labelledby="cad">
       <SectionTitle marker={marker} id="cad">CAD</SectionTitle>
-      <Img src="tiffin/cad.png" alt="CAD renders of the lunchbox: open tray with containers, closed lid, and side profile" />
+      <div data-reveal>
+        <Img src="tiffin/cad.png" alt="CAD renders of the lunchbox: open tray with containers, closed lid, and side profile" />
+      </div>
     </section>
 
     <section class="container" aria-labelledby="manufacturing">
       <SectionTitle marker={marker} id="manufacturing">Manufacturing</SectionTitle>
-      <ul class="grid-photos">
+      <ul class="grid-photos" data-stagger="0.06">
         {
           manufacturing.map((alt, i) => (
             <li>
-              <Img src={`tiffin/mfg-${i + 1}.jpg`} alt={alt} sizes="(min-width: 1280px) 280px, (min-width: 800px) 23vw, 50vw" />
+              <Img src={`tiffin/mfg-${i + 1}.png`} alt={alt} sizes="(min-width: 1280px) 280px, (min-width: 800px) 23vw, 50vw" />
             </li>
           ))
         }
@@ -137,7 +171,7 @@ const manufacturing = [
       <div class="container">
         <SectionTitle marker={marker} id="prototype">Final Prototype</SectionTitle>
       </div>
-      <div class="bleed">
+      <div class="bleed" data-reveal="clip">
         <Img src="tiffin/exploded.jpg" alt="Exploded render of the coral tiffin: handle, lid, containers and stainless steel tray" sizes="100vw" />
       </div>
     </section>
@@ -146,88 +180,139 @@ const manufacturing = [
       <div class="container">
         <SectionTitle marker={marker} id="packaging">Packaging</SectionTitle>
         <div class="packaging">
-          <div class="boxes">
-            <Img src="tiffin/packaging-front.png" alt="Front of the SAATH by tiffin box" sizes="(min-width: 1280px) 400px, 40vw" />
-            <Img src="tiffin/packaging-back.png" alt="Back of the box with specifications and what’s inside" sizes="(min-width: 1280px) 400px, 40vw" />
+          <div class="boxes" data-stagger="0.12">
+            <div><Img src="tiffin/packaging-front.png" alt="Front of the SAATH by tiffin box" sizes="(min-width: 1280px) 400px, 40vw" /></div>
+            <div><Img src="tiffin/packaging-back.png" alt="Back of the box with specifications and what’s inside" sizes="(min-width: 1280px) 400px, 40vw" /></div>
           </div>
-          <Img src="tiffin/packaging-dieline.png" alt="Flat dieline of the SAATH packaging" sizes="(min-width: 1280px) 713px, 60vw" />
+          <div data-reveal>
+            <Img src="tiffin/packaging-dieline.png" alt="Flat dieline of the SAATH packaging" sizes="(min-width: 1280px) 713px, 60vw" />
+          </div>
         </div>
       </div>
-      <div class="bleed spaced">
+      <div class="bleed spaced" data-reveal="clip">
         <Img src="tiffin/packaging-display.jpg" alt="The tiffin lunchbox displayed in front of its retail box" sizes="100vw" />
       </div>
     </section>
 
-    <section aria-labelledby="colors">
-      <div class="container">
-        <SectionTitle marker={marker} id="colors">Colors</SectionTitle>
-      </div>
-      <div class="bleed">
-        <Img src="tiffin/colors.jpg" alt="The tiffin in coral, forest green and slate blue on matching pedestals" sizes="100vw" />
-      </div>
-    </section>
-
-    <section aria-labelledby="materials">
-      <div class="container">
-        <SectionTitle marker={marker} id="materials">Materials</SectionTitle>
-      </div>
-      <div class="bleed">
-        <Img
-          src="tiffin/materials.jpg"
-          alt="Exploded parts labelled with materials: polypropylene lid, base and plate, expanded polypropylene layers, stainless steel plate and containers, silicone lids, metal hinge and rubber handle"
-          sizes="100vw"
-        />
-      </div>
-    </section>
-
-    <section aria-labelledby="sale-sheet">
-      <div class="container">
-        <SectionTitle marker={marker} id="sale-sheet">Product Sale Sheet</SectionTitle>
-      </div>
-      <div class="bleed">
-        <Img
-          src="tiffin/sale-sheet.jpg"
-          alt="Sale sheet: key features, specifications, estimated unit cost PKR 2990–3610 and suggested retail price PKR 4500"
-          sizes="100vw"
-        />
-      </div>
-    </section>
+    {
+      fullBleed.map((s) => (
+        <section aria-labelledby={s.id}>
+          <div class="container">
+            <SectionTitle marker={marker} id={s.id}>
+              {s.title}
+            </SectionTitle>
+          </div>
+          <div class="bleed" data-reveal="clip">
+            <Img src={s.src} alt={s.alt} sizes="100vw" />
+          </div>
+        </section>
+      ))
+    }
 
     <section class="container" aria-labelledby="merchandising">
       <SectionTitle marker={marker} id="merchandising">Merchandising</SectionTitle>
-      <Img src="tiffin/merchandising.jpg" alt="SAATH lunchbox box on an Al-Fateh supermarket shelf beside competing lunch boxes" class="rounded-img" />
+      <div class="merch" data-reveal>
+        <Img src="tiffin/merchandising.jpg" alt="SAATH lunchbox box on an Al-Fateh supermarket shelf beside competing lunch boxes" />
+      </div>
     </section>
   </div>
+
+  <NextProject current="tiffin" />
 </Base>
 
 <style>
-  .hero {
-    margin-top: clamp(0px, 5vw, 62px);
-  }
-
   .case {
     margin-top: var(--section-gap);
+    --steel: #a9b0b6;
+    --brass: #b08d57;
   }
 
-  .case :global(.regional),
-  .case :global(.concept) {
+  /* Hero steam: soft blurred plumes rising above the food. */
+  .steam {
+    position: absolute;
+    left: 50%;
+    right: 8%;
+    top: 22%;
+    height: 34%;
+    pointer-events: none;
+  }
+
+  .steam span {
+    position: absolute;
+    bottom: 0;
+    width: 14%;
+    aspect-ratio: 1 / 2.4;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0));
+    filter: blur(14px);
+    opacity: 0;
+    animation: steam 7.5s var(--ease-inout) infinite;
+  }
+
+  .steam span:nth-child(1) {
+    left: 18%;
+  }
+  .steam span:nth-child(2) {
+    left: 34%;
+    animation-delay: 1.6s;
+  }
+  .steam span:nth-child(3) {
+    left: 50%;
+    animation-delay: 3.1s;
+  }
+  .steam span:nth-child(4) {
+    left: 63%;
+    animation-delay: 4.5s;
+  }
+  .steam span:nth-child(5) {
+    left: 76%;
+    animation-delay: 5.9s;
+  }
+
+  @keyframes steam {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 20%, 0) scale(0.7);
+    }
+    30% {
+      opacity: 0.75;
+    }
+    100% {
+      opacity: 0;
+      transform: translate3d(8%, -120%, 0) scale(1.25);
+    }
+  }
+
+  .regional,
+  .concept {
+    max-width: 969px;
     margin-inline: auto;
   }
 
   .insights {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: clamp(32px, 4vw, 48px) clamp(16px, 4vw, 88px);
+    gap: clamp(28px, 4vw, 48px) clamp(16px, 3vw, 56px);
     margin-top: clamp(-90px, -6vw, -24px);
     position: relative;
     list-style: none;
-    color: var(--text);
+    color: var(--ink-2);
   }
 
   .insights li {
     display: grid;
     align-content: start;
-    gap: clamp(20px, 3vw, 44px);
+    gap: clamp(18px, 2.4vw, 32px);
+    padding: clamp(18px, 1.8vw, 24px);
+    border: 1px solid transparent;
+    border-radius: 18px;
+    background: color-mix(in srgb, var(--paper) 86%, transparent);
+    /* No CSS transform transition here: GSAP animates these cards' transforms. */
+    transition: border-color 0.4s ease;
+  }
+
+  .insights li:hover {
+    border-color: color-mix(in srgb, var(--brass) 55%, transparent);
   }
 
   .icon {
@@ -243,22 +328,34 @@ const manufacturing = [
     width: 48px;
   }
 
-  .case :global(.moodboard) {
-    width: 100%;
+  /* Moodboard: large rounded frame, the composite zooms out and drifts as it scrolls through. */
+  .moodboard {
+    overflow: hidden;
     border-radius: clamp(28px, 7vw, 91px);
+  }
+
+  .moodboard-media :global(img) {
+    width: 100%;
+    transition: transform 1.2s var(--ease-out);
+  }
+
+  .moodboard:hover .moodboard-media :global(img) {
+    transform: scale(1.03);
   }
 
   .hmw {
     max-width: 1020px;
-    margin: clamp(40px, 6vw, 70px) auto 0;
-    color: var(--text);
+    margin: clamp(40px, 6vw, 80px) auto 0;
+    color: var(--ink-2);
+    font-weight: 300;
     font-size: var(--fs-lead);
-    line-height: 2.08;
+    line-height: 1.7;
     text-align: center;
   }
 
   .hmw strong {
-    font-weight: 700;
+    color: var(--tiffin-clay);
+    font-weight: 600;
   }
 
   .projection {
@@ -268,25 +365,35 @@ const manufacturing = [
     gap: 40px;
   }
 
-  .projection :global(.saath) {
+  .saath {
     width: min(294px, 70%);
     justify-self: center;
   }
 
-  .projection p {
+  :global(.js:not(.reduced-motion)) .saath {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  .saath-copy {
     max-width: 509px;
     justify-self: center;
+    color: var(--ink-2);
     font-size: var(--fs-lead);
-    line-height: 1.25;
+    line-height: 1.35;
     text-align: center;
   }
 
-  .projection strong {
+  .saath-copy strong {
+    color: var(--ink);
     font-weight: 700;
   }
 
-  .projection strong.semi {
+  .saath-copy strong.semi {
     font-weight: 600;
+  }
+
+  .saath-copy [data-saath-word] {
+    color: var(--tiffin-clay);
   }
 
   .grid-photos {
@@ -308,20 +415,19 @@ const manufacturing = [
     gap: clamp(16px, 3vw, 50px);
   }
 
-  .boxes {
-    display: grid;
-    gap: 0;
-  }
-
   .packaging :global(img) {
     width: 100%;
+  }
+
+  .boxes {
+    display: grid;
   }
 
   .spaced {
     margin-top: clamp(40px, 6vw, 80px);
   }
 
-  .case :global(.rounded-img) {
+  .merch :global(img) {
     width: 100%;
     border-radius: 20px;
   }
@@ -351,10 +457,6 @@ const manufacturing = [
     .grid-photos :global(img) {
       border-radius: 14px;
     }
-
-    .hmw {
-      line-height: 1.7;
-    }
   }
 
   @media (max-width: 560px) {
@@ -364,15 +466,20 @@ const manufacturing = [
 
     .insights {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .insights li {
+      padding: 14px;
     }
 
     .icon {
-      width: 72px;
-      height: 72px;
+      width: 64px;
+      height: 64px;
     }
 
     .icon :global(img) {
-      width: 40px;
+      width: 36px;
     }
   }
 </style>
