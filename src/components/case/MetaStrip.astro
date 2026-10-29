@@ -1,0 +1,102 @@
+---
+import type { Project } from '../../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { meta } = Astro.props.project;
+// Role, year and tools aren't in the Figma file; each appears once it's filled in src/data/projects.ts.
+const items = [
+  { label: 'Type', value: meta.type },
+  { label: 'Role', value: meta.role },
+  { label: 'Year', value: meta.year },
+  { label: 'Tools', value: meta.tools?.join(', ') },
+].filter((i) => i.value);
+---
+
+<div class="container-wide">
+  <dl class="meta" data-stagger="0.06">
+    {
+      items.map((i) => (
+        <div class="item">
+          <dt class="label">{i.label}</dt>
+          <dd>{i.value}</dd>
+        </div>
+      ))
+    }
+    {
+      meta.scope.length > 0 && (
+        <div class="item scope">
+          <dt class="label">Scope</dt>
+          <dd>
+            <ul>
+              {meta.scope.map((s) => (
+                <li class="pill">{s}</li>
+              ))}
+            </ul>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+</div>
+
+<style>
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, auto));
+    justify-content: start;
+    gap: 28px clamp(32px, 5vw, 80px);
+    margin: 0;
+    padding-block: clamp(28px, 3.4vw, 48px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .item {
+    display: grid;
+    gap: 12px;
+    align-content: start;
+  }
+
+  dt {
+    color: var(--ink-3);
+  }
+
+  dd {
+    margin: 0;
+    font-size: var(--fs-body);
+    color: var(--page-fg);
+  }
+
+  .scope {
+    grid-column: span 3;
+  }
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+  }
+
+  .pill {
+    border-color: var(--line);
+    padding: 8px 13px;
+  }
+
+  @media (max-width: 720px) {
+    .meta {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .scope {
+      grid-column: 1 / -1;
+    }
+
+    .pill {
+      white-space: normal;
+      line-height: 1.3;
+    }
+  }
+</style>

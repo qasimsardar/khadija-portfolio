@@ -1,0 +1,98 @@
+---
+import Img from '../Img.astro';
+import type { Project } from '../../data/projects';
+
+interface Props {
+  project: Project;
+  /** Dark intro band (Prisma), regardless of the page theme. */
+  dark?: boolean;
+}
+
+const { project: p, dark = false } = Astro.props;
+const hero = p.hero!;
+---
+
+<section class:list={['case-hero', { dark }]} data-accent={p.accent} aria-labelledby="case-title">
+  <div class="container-wide intro">
+    <p class="label crumbs">
+      <a class="link-draw" href="/work">Work</a>
+      <span aria-hidden="true">/</span>
+      <span>{p.category}</span>
+    </p>
+    <h1 id="case-title" class="display title" data-split="intro">{p.name}</h1>
+    <p class="lead desc" data-reveal>
+      <strong>{p.mark}</strong>
+      {p.description}
+    </p>
+  </div>
+  <div class="hero-frame" data-hero>
+    <div class="hero-media" transition:name={`hero-${p.slug}`} data-hero-media>
+      <Img src={hero.src} alt={hero.alt} sizes="100vw" eager />
+      <slot name="overlay" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .case-hero {
+    padding-top: clamp(120px, 16vh, 200px);
+  }
+
+  .case-hero.dark {
+    --page-fg: #f4f1ea;
+    --body-fg: rgba(244, 241, 234, 0.78);
+    --ink-3: rgba(244, 241, 234, 0.55);
+    background: #0b0b10;
+    color: var(--page-fg);
+  }
+
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    align-items: end;
+    gap: 24px clamp(32px, 6vw, 120px);
+    padding-bottom: clamp(36px, 5vw, 72px);
+  }
+
+  .crumbs {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 10px;
+    color: var(--ink-3);
+  }
+
+  .title {
+    font-size: var(--fs-mega);
+    line-height: 0.9;
+    letter-spacing: -0.055em;
+  }
+
+  .desc {
+    color: var(--body-fg);
+  }
+
+  .desc strong {
+    color: var(--page-fg);
+    font-weight: 600;
+  }
+
+  .hero-frame {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-media {
+    position: relative;
+    will-change: transform;
+  }
+
+  .hero-media :global(img) {
+    width: 100%;
+  }
+
+  @media (max-width: 900px) {
+    .intro {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

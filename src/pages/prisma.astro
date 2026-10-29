@@ -4,7 +4,12 @@ import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
 import SectionTitle from '../components/SectionTitle.astro';
 import LazyVideo from '../components/LazyVideo.astro';
+import CaseHero from '../components/case/CaseHero.astro';
+import MetaStrip from '../components/case/MetaStrip.astro';
+import NextProject from '../components/case/NextProject.astro';
+import { projects } from '../data/projects';
 
+const project = projects.find((p) => p.slug === 'prisma')!;
 const marker = '#fce5d6';
 const pains = [
   // The first description is set at 16px in the Figma file; the other two are 20px.
@@ -54,40 +59,45 @@ const gallerySmall = {
 ---
 
 <Base
+  page="prisma"
   title="Prisma"
-  theme="cream"
+  accent={project.accent}
+  progress
+  navOnDark
+  ogImage="prisma/hero.jpg"
   description="PRISMA is a portable, multifunctional speaker for fitness and dance instructors, combining powerful sound, customizable RGB lighting and hands-free voice amplification."
 >
-  <div class="hero bleed">
-    <Img src="prisma/hero.jpg" alt="Two Prisma speakers with RGB-lit edges in front of large glowing PRISMA lettering" sizes="100vw" eager />
-  </div>
+  <CaseHero project={project} dark>
+    <div slot="overlay" class="sweep" aria-hidden="true"><span></span></div>
+  </CaseHero>
+  <MetaStrip project={project} />
 
   <div class="case">
     <section class="container" aria-labelledby="research">
       <div class="research">
         <div class="research-text">
-          <SectionTitle marker={marker} id="research">User Research</SectionTitle>
-          <p class="copy">
+          <SectionTitle marker={marker} led id="research">User Research</SectionTitle>
+          <p class="copy" data-reveal>
             <strong>Zumba instructors</strong> lead energetic group classes, using <strong>music</strong> to <strong>motivate</strong>
             participants while giving <strong>verbal instructions</strong>. They <strong>constantly move</strong> and demonstrate
             exercises, often needing <strong>portable audio equipment</strong> and <strong>clear voice projection.</strong>
           </p>
         </div>
-        <Img
-          src="prisma/research-instructor.jpg"
-          alt="Sketch of a dance instructor wearing a headset microphone, leading a class"
-          sizes="(min-width: 1280px) 852px, (min-width: 800px) 67vw, 100vw"
-        />
+        <div data-reveal>
+          <Img
+            src="prisma/research-instructor.jpg"
+            alt="Sketch of a dance instructor wearing a headset microphone, leading a class"
+            sizes="(min-width: 1280px) 852px, (min-width: 800px) 67vw, 100vw"
+          />
+        </div>
       </div>
-      <Img
-        src="prisma/research-flow.jpg"
-        alt="Sketches showing a loud speaker, an instructor shouting over it, and resulting voice strain"
-        class="flow"
-      />
-      <ol class="pains">
+      <div class="flow" data-reveal>
+        <Img src="prisma/research-flow.jpg" alt="Sketches showing a loud speaker, an instructor shouting over it, and resulting voice strain" />
+      </div>
+      <ol class="pains" data-chain>
         {
           pains.map((p, i) => (
-            <li>
+            <li data-chain-step>
               <span class="num" aria-hidden="true">
                 {i + 1}
               </span>
@@ -96,6 +106,11 @@ const gallerySmall = {
                 <br />
                 <span class:list={{ small: p.small }}>{p.text}</span>
               </p>
+              {i < pains.length - 1 && (
+                <svg class="arrow" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true">
+                  <path d="M0 6 H96 M90 1 L97 6 L90 11" fill="none" stroke="currentColor" stroke-width="1.2" vector-effect="non-scaling-stroke" data-chain-arrow />
+                </svg>
+              )}
             </li>
           ))
         }
@@ -103,8 +118,8 @@ const gallerySmall = {
     </section>
 
     <section class="container" aria-labelledby="insights">
-      <SectionTitle marker={marker} id="insights">Key Insights</SectionTitle>
-      <ul class="venn" aria-label="Research sources">
+      <SectionTitle marker={marker} led id="insights">Key Insights</SectionTitle>
+      <ul class="venn" aria-label="Research sources" data-stagger="0.14">
         {
           sources.map((s) => (
             <li class={s.tone}>
@@ -114,7 +129,7 @@ const gallerySmall = {
           ))
         }
       </ul>
-      <ul class="needs" aria-label="What instructors need">
+      <ul class="needs" aria-label="What instructors need" data-stagger="0.07">
         {
           needs.map((n) => (
             <li>
@@ -127,26 +142,30 @@ const gallerySmall = {
     </section>
 
     <section class="container stack" aria-labelledby="ideation">
-      <SectionTitle marker={marker} id="ideation">Ideation</SectionTitle>
-      <Img src="prisma/ideation.jpg" alt="Sheet of concept sketches exploring many portable speaker forms" />
-      <Img src="prisma/ideation-handles.jpg" alt="Refined sketches of the triangular speaker with its handle" />
+      <SectionTitle marker={marker} led id="ideation">Ideation</SectionTitle>
+      <div data-reveal><Img src="prisma/ideation.jpg" alt="Sheet of concept sketches exploring many portable speaker forms" /></div>
+      <div data-reveal><Img src="prisma/ideation-handles.png" alt="Refined sketches of the triangular speaker with its handle" /></div>
     </section>
 
     <section class="container" aria-labelledby="branding">
-      <SectionTitle marker={marker} id="branding">Branding</SectionTitle>
+      <SectionTitle marker={marker} led id="branding">Branding</SectionTitle>
       <div class="brand">
-        <Img src="prisma/logo.jpg" alt="Prisma logo with the tagline Protect your voice. Amplify the fun" class="logo" sizes="380px" />
-        <ul class="swatches" aria-label="Color palette">
+        <div class="logo" data-reveal>
+          <Img src="prisma/logo.jpg" alt="Prisma logo with the tagline Protect your voice. Amplify the fun" sizes="380px" />
+        </div>
+        <ul class="swatches" aria-label="Color palette. Select a colour to copy its hex code." data-swatches>
           {
             swatches.map((c) => (
               <li>
-                <span class="dot" style={`background: ${c}`} />
-                <span>{c.slice(1)}</span>
+                <button type="button" class="swatch" data-hex={c} data-cursor="Copy" aria-label={`Copy ${c}`}>
+                  <span class="dot" style={`background: ${c}`} />
+                  <span class="hex">{c.slice(1)}</span>
+                </button>
               </li>
             ))
           }
         </ul>
-        <div class="type">
+        <div class="type" data-stagger="0.12">
           <figure>
             <span class="aa" aria-hidden="true">Aa</span>
             <figcaption>Montserrat</figcaption>
@@ -156,86 +175,126 @@ const gallerySmall = {
             <figcaption>Source Sans 3</figcaption>
           </figure>
         </div>
-        <Img src="prisma/moodboard.jpg" alt="Prisma moodboard: disco ball, marble sculpture, dancers, cassette tapes and neon light" class="moodboard" />
+        <div class="led-frame moodboard" data-reveal>
+          <Img src="prisma/moodboard.png" alt="Prisma moodboard: disco ball, marble sculpture, dancers, cassette tapes and neon light" />
+        </div>
       </div>
+      <p class="toast" role="status" aria-live="polite" data-toast></p>
     </section>
 
     <section class="container" aria-labelledby="cad">
-      <SectionTitle marker={marker} id="cad">CAD</SectionTitle>
-      <Img src="prisma/cad.png" alt="CAD renders of the speaker: three-quarter view with handle, top view and both triangular end caps" />
+      <SectionTitle marker={marker} led id="cad">CAD</SectionTitle>
+      <div data-reveal>
+        <Img src="prisma/cad.png" alt="CAD renders of the speaker: three-quarter view with handle, top view and both triangular end caps" />
+      </div>
     </section>
 
-    <section class="container" aria-labelledby="proto">
-      <SectionTitle marker={marker} id="proto">Proto</SectionTitle>
-      <ul class="grid-photos cols-4">
-        {
-          protoAlts.map((alt, i) => (
-            <li>
-              <Img src={`prisma/proto-${String(i + 1).padStart(2, '0')}.jpg`} alt={alt} sizes="(min-width: 1280px) 285px, (min-width: 800px) 23vw, 50vw" />
-            </li>
-          ))
-        }
-      </ul>
+    <section class="proto" aria-labelledby="proto" data-hscroll>
+      <div class="container">
+        <SectionTitle marker={marker} led id="proto">Proto</SectionTitle>
+      </div>
+      <div class="proto-viewport">
+        <ul class="proto-track" data-hscroll-track>
+          {
+            protoAlts.map((alt, i) => (
+              <li>
+                <Img
+                  src={`prisma/proto-${String(i + 1).padStart(2, '0')}.png`}
+                  alt={alt}
+                  sizes="(min-width: 900px) 32vw, (min-width: 600px) 45vw, 92vw"
+                />
+              </li>
+            ))
+          }
+        </ul>
+      </div>
     </section>
 
     <section class="container" aria-labelledby="final">
-      <SectionTitle marker={marker} id="final">Final Functional Prototype</SectionTitle>
-      <div class="gallery">
+      <SectionTitle marker={marker} led id="final">Final Functional Prototype</SectionTitle>
+      <div class="gallery" data-stagger="0.07">
         <div class="side">
           {gallerySmall.left.map((g) => <Img src={g.src} alt={g.alt} sizes="(min-width: 1280px) 180px, 30vw" />)}
         </div>
-        <Img
-          src="prisma/final-main.jpg"
-          alt="Prisma prototype glowing with RGB light against a purple backdrop"
-          class="main"
-          sizes="(min-width: 1280px) 760px, (min-width: 800px) 60vw, 100vw"
-        />
+        <div class="main">
+          <Img
+            src="prisma/final-main.jpg"
+            alt="Prisma prototype glowing with RGB light against a purple backdrop"
+            sizes="(min-width: 1280px) 760px, (min-width: 800px) 60vw, 100vw"
+          />
+        </div>
         <div class="side">
           {gallerySmall.right.map((g) => <Img src={g.src} alt={g.alt} sizes="(min-width: 1280px) 180px, 30vw" />)}
         </div>
       </div>
       <div class="explode">
-        <Img src="prisma/render.jpg" alt="Render of Prisma with its handle up and RGB light strip" sizes="(min-width: 1280px) 431px, 36vw" />
-        <Img src="prisma/exploded.jpg" alt="Exploded view of Prisma showing handle, mesh, frame, LED strip, drivers, battery and circuit board" sizes="(min-width: 1280px) 765px, 64vw" />
+        <div data-reveal><Img src="prisma/render.jpg" alt="Render of Prisma with its handle up and RGB light strip" sizes="(min-width: 1280px) 431px, 36vw" /></div>
+        <div data-reveal>
+          <Img src="prisma/exploded.jpg" alt="Exploded view of Prisma showing handle, mesh, frame, LED strip, drivers, battery and circuit board" sizes="(min-width: 1280px) 765px, 64vw" />
+        </div>
       </div>
     </section>
 
     <section class="container" aria-labelledby="packaging">
-      <SectionTitle marker={marker} id="packaging">Packaging</SectionTitle>
-      <Img src="prisma/packaging.jpg" alt="Prisma packaging: flat dieline, kraft sleeve, printed box and the speaker inside its packaging" />
+      <SectionTitle marker={marker} led id="packaging">Packaging</SectionTitle>
+      <div data-reveal>
+        <Img src="prisma/packaging.png" alt="Prisma packaging: flat dieline, kraft sleeve, printed box and the speaker inside its packaging" />
+      </div>
     </section>
 
     <section aria-labelledby="app">
       <div class="container">
-        <SectionTitle marker={marker} id="app">App Design</SectionTitle>
+        <SectionTitle marker={marker} led id="app">App Design</SectionTitle>
       </div>
-      <div class="bleed">
+      <div class="bleed" data-reveal>
         <Img src="prisma/app.jpg" alt="Prisma companion app screens for speaker connection, lighting and music playback" sizes="100vw" />
-      </div>
-      <div class="container video">
-        <LazyVideo
-          src="/video/prisma.mp4"
-          poster="/video/prisma-poster.jpg"
-          width={1280}
-          height={609}
-          label="Prisma product video"
-        />
       </div>
     </section>
 
-    <section class="bleed studio" aria-label="Prisma in use">
+    <!-- "INTRODUCING": the film opens from an inset frame to full bleed as it scrolls in. -->
+    <section class="film" aria-label="Prisma product video" data-expand>
+      <div class="film-frame" data-expand-frame>
+        <LazyVideo src="/video/prisma.mp4" poster="/video/prisma-poster.jpg" width={1280} height={609} label="Prisma product video" />
+      </div>
+    </section>
+
+    <section class="bleed studio" aria-label="Prisma in use" data-reveal>
       <Img src="prisma/studio.jpg" alt="Prisma speaker glowing on the floor of a dance studio during a class" sizes="100vw" />
     </section>
   </div>
+
+  <NextProject current="prisma" />
 </Base>
 
 <style>
-  .hero {
-    margin-top: clamp(0px, 5vw, 72px);
-  }
-
   .case {
     margin-top: var(--section-gap);
+  }
+
+  /* Hero: RGB light sweep across the glowing letters (overlay blend, masked to the lettering band). */
+  .sweep {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    -webkit-mask-image: linear-gradient(to bottom, #000 8%, #000 52%, transparent 74%);
+    mask-image: linear-gradient(to bottom, #000 8%, #000 52%, transparent 74%);
+  }
+
+  .sweep span {
+    position: absolute;
+    inset: -60% -20%;
+    background: conic-gradient(from 90deg, transparent 0 18%, #dd1886 24%, #7d4c9e 30%, #3e82c4 36%, #2ee6c9 42%, #d5ee74 48%, transparent 56% 100%);
+    filter: blur(30px);
+    opacity: 0.85;
+    animation: sweep-spin 11s linear infinite;
+  }
+
+  @keyframes sweep-spin {
+    to {
+      transform: rotate(1turn);
+    }
   }
 
   /* User research */
@@ -252,27 +311,24 @@ const gallerySmall = {
     gap: 24px;
   }
 
-  .research-text .copy {
-    padding-bottom: 20px;
-  }
-
-  .research + :global(.flow) {
+  .flow {
     margin-top: clamp(32px, 5vw, 60px);
   }
 
   .pains {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px clamp(24px, 4vw, 60px);
+    gap: 32px clamp(40px, 5vw, 72px);
     margin-top: 40px;
     padding: 0;
     list-style: none;
-    color: var(--text);
+    color: var(--ink-2);
   }
 
   .pains li {
+    position: relative;
     display: flex;
-    gap: clamp(16px, 3.5vw, 50px);
+    gap: clamp(16px, 2.4vw, 32px);
   }
 
   .pains .num {
@@ -283,15 +339,28 @@ const gallerySmall = {
     height: 49px;
     border-radius: 50%;
     background: #fde9e0;
+    color: var(--ink);
     font-weight: 600;
   }
 
   .pains strong {
+    color: var(--ink);
     font-weight: 600;
   }
 
   .pains .small {
     font-size: 16px;
+  }
+
+  /* Connector drawn between steps (1 -> 2 -> 3). */
+  .arrow {
+    position: absolute;
+    top: 18px;
+    right: calc(-1 * clamp(40px, 5vw, 72px) + 6px);
+    width: calc(clamp(40px, 5vw, 72px) - 12px);
+    height: 12px;
+    color: var(--prisma);
+    overflow: visible;
   }
 
   /* Key insights: three overlapping circles */
@@ -300,7 +369,7 @@ const gallerySmall = {
     justify-content: center;
     padding: 20px 0 clamp(40px, 8vw, 110px);
     list-style: none;
-    color: var(--text);
+    color: var(--ink-2);
   }
 
   .venn li {
@@ -316,6 +385,7 @@ const gallerySmall = {
     text-align: center;
     font-size: clamp(0.8125rem, 0.6rem + 0.9vw, 1.25rem);
     line-height: 1.5;
+    mix-blend-mode: multiply;
   }
 
   .venn li + li {
@@ -331,6 +401,7 @@ const gallerySmall = {
   }
 
   .venn strong {
+    color: var(--ink);
     font-weight: 600;
   }
 
@@ -339,10 +410,10 @@ const gallerySmall = {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 24px 16px;
     padding: clamp(28px, 5vw, 62px) clamp(16px, 2vw, 24px) clamp(28px, 3.4vw, 44px);
-    border: 1px solid #979797;
+    border: 1px solid var(--line);
     border-radius: 33px;
     list-style: none;
-    color: var(--text);
+    color: var(--ink-2);
     text-align: center;
   }
 
@@ -361,10 +432,10 @@ const gallerySmall = {
   .brand {
     display: grid;
     justify-items: center;
-    gap: clamp(28px, 4vw, 40px);
+    gap: clamp(28px, 4vw, 48px);
   }
 
-  .brand :global(.logo) {
+  .logo {
     width: min(380px, 80%);
   }
 
@@ -374,15 +445,21 @@ const gallerySmall = {
     gap: 20px;
     width: 100%;
     list-style: none;
-    color: var(--text);
-    font-size: clamp(0.9375rem, 0.7rem + 1vw, 1.5rem);
-    text-align: center;
   }
 
-  .swatches li {
+  .swatch {
     display: grid;
     justify-items: center;
-    gap: 22px;
+    gap: 18px;
+    width: 100%;
+    padding: 8px 0;
+    border: 0;
+    background: none;
+    color: var(--ink-2);
+    font-family: var(--font-mono);
+    font-size: clamp(0.75rem, 0.6rem + 0.6vw, 1.125rem);
+    letter-spacing: 0.06em;
+    cursor: copy;
   }
 
   .dot {
@@ -390,13 +467,19 @@ const gallerySmall = {
     width: min(133px, 100%);
     aspect-ratio: 1;
     border-radius: 50%;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .swatch:hover .dot,
+  .swatch:focus-visible .dot {
+    transform: scale(1.06);
   }
 
   .type {
     display: grid;
     grid-template-columns: 1fr 1fr;
     width: 100%;
-    color: var(--text);
+    color: var(--ink-2);
     text-align: center;
   }
 
@@ -406,39 +489,117 @@ const gallerySmall = {
   }
 
   .aa {
+    color: var(--ink);
     font-size: clamp(4.5rem, 2.5rem + 7vw, 8rem);
     line-height: 1;
   }
 
   .type figcaption {
     margin-top: 12px;
-    font-size: clamp(1.0625rem, 0.9rem + 0.75vw, 1.5rem);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
-  .sans3 {
+  .sans3 .aa {
     font-family: 'Source Sans 3', sans-serif;
   }
 
-  .brand :global(.moodboard) {
+  /* Rotating RGB border: the LED strip motif around framed media (transform-only animation). */
+  .led-frame {
+    position: relative;
     width: 100%;
-    margin-top: clamp(20px, 3vw, 40px);
-    border-radius: clamp(16px, 2.8vw, 35px);
+    padding: 3px;
+    overflow: hidden;
+    border-radius: calc(var(--radius) + 3px);
+    isolation: isolate;
   }
 
-  /* Photo grids */
-  .grid-photos {
-    display: grid;
-    gap: 15px;
+  .led-frame::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    z-index: -1;
+    background: conic-gradient(#dd1886, #7d4c9e, #3e82c4, #2ee6c9, #d5ee74, #dd1886);
+    animation: sweep-spin 6s linear infinite;
+  }
+
+  .led-frame :global(img) {
+    width: 100%;
+    border-radius: var(--radius);
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    z-index: 60;
+    padding: 12px 18px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translate(-50%, 16px);
+    transition:
+      opacity 0.4s ease,
+      transform 0.6s var(--ease-out);
+    pointer-events: none;
+  }
+
+  .toast:global(.is-on) {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  /* Proto: horizontal track (pinned and scrubbed on desktop, swipeable on touch). */
+  .proto-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding-inline: var(--gutter);
+  }
+
+  .proto-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .proto-track {
+    display: flex;
+    gap: 16px;
+    width: max-content;
     list-style: none;
   }
 
-  .cols-4 {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .proto-track li {
+    flex: none;
+    width: clamp(260px, 32vw, 520px);
+    scroll-snap-align: start;
   }
 
-  .grid-photos :global(img) {
+  .proto-track :global(img) {
     width: 100%;
     border-radius: 20px;
+  }
+
+  /* Pinned: fill the viewport and centre the track vertically. */
+  .proto:global(.hscroll-on) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .proto:global(.hscroll-on) .proto-viewport {
+    overflow: visible;
+  }
+
+  .proto:global(.hscroll-on) .proto-track li {
+    width: clamp(320px, 40vw, 640px);
   }
 
   /* Final prototype gallery: small stacks either side of the hero shot */
@@ -467,11 +628,24 @@ const gallerySmall = {
     margin-top: clamp(32px, 5vw, 70px);
   }
 
-  .video {
+  /* Film expands to full bleed */
+  .film {
     margin-top: clamp(32px, 5vw, 70px);
   }
 
+  .film-frame {
+    overflow: hidden;
+  }
+
+  :global(.js:not(.reduced-motion)) .film-frame {
+    clip-path: inset(0 8% round 28px);
+  }
+
   .studio {
+    margin-top: 0;
+  }
+
+  .case > .studio {
     margin-top: clamp(40px, 3vw, 40px);
   }
 
@@ -480,12 +654,20 @@ const gallerySmall = {
       grid-template-columns: 1fr;
     }
 
-    .research-text .copy {
-      padding-bottom: 0;
-    }
-
     .pains {
       grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .arrow {
+      top: auto;
+      bottom: -34px;
+      left: 24px;
+      right: auto;
+      width: 28px;
+      height: 12px;
+      transform: rotate(90deg);
+      transform-origin: left center;
     }
 
     .needs {
@@ -494,30 +676,19 @@ const gallerySmall = {
     }
 
     .swatches {
-      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 10px;
     }
 
-    .swatches li {
+    .swatch {
       gap: 10px;
     }
 
-    .cols-4 {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .grid-photos :global(img) {
-      border-radius: 14px;
-    }
-
-    /* Hero shot on top, the six detail shots in a 3-column grid below. */
     .gallery {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       padding-inline: 0;
     }
 
-    .gallery :global(.main) {
+    .gallery .main {
       grid-column: 1 / -1;
       order: -1;
     }
@@ -530,7 +701,7 @@ const gallerySmall = {
       grid-template-columns: 1fr;
     }
 
-    .explode :global(img:first-child) {
+    .explode > :first-child {
       width: 70%;
       justify-self: center;
     }
@@ -539,14 +710,6 @@ const gallerySmall = {
   @media (max-width: 480px) {
     .needs {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .cols-4 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .swatches {
-      font-size: 0.6875rem;
     }
   }
 </style>
