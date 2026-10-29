@@ -41,7 +41,7 @@ const preview = p.slug === 'gosafe' ? 'work/gosafe.png' : p.cover.src;
       </div>
     </div>
     <p class="desc">
-      <strong style={`color: ${p.accent}; font-weight: ${p.slug === 'gosafe' ? 700 : 600}`}>{p.mark}</strong>
+      <strong class="mark" style={`font-weight: ${p.slug === 'gosafe' ? 700 : 600}`}>{p.mark}</strong>
       {p.description}
     </p>
   </div>
@@ -169,6 +169,15 @@ const preview = p.slug === 'gosafe' ? 'work/gosafe.png' : p.cover.src;
 
   :global(.js:not(.reduced-motion)) .desc {
     color: var(--work-muted, var(--tone-muted));
+  }
+
+  /* Readable ink for the name, the project accent as an underline (accent text fails contrast on light tones). */
+  .mark {
+    color: var(--work-ink, var(--tone-ink));
+    text-decoration: underline;
+    text-decoration-color: var(--card-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.22em;
   }
 
   @media (max-width: 720px) {

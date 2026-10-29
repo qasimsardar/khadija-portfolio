@@ -232,13 +232,6 @@ a {
   letter-spacing: var(--tracking-display);
 }
 
-.h2 {
-  font-weight: 300;
-  font-size: var(--fs-h2);
-  line-height: 1.05;
-  letter-spacing: -0.035em;
-}
-
 .lead {
   font-weight: 300;
   font-size: var(--fs-lead);
@@ -328,17 +321,14 @@ a {
   margin-top: 0;
 }
 
-.media-rounded :is(img, video) {
-  border-radius: var(--radius);
-}
-
 /* ------------------------------------------------------------------------------------------
    Motion initial states. Applied only when JS is running and motion is allowed, so content is
    never hidden if scripts fail (an inline failsafe also removes .js if motion never boots).
    ------------------------------------------------------------------------------------------ */
-.js [data-reveal],
-.js [data-stagger] > *,
-.js [data-split] {
+/* Under reduced motion nothing is pre-hidden: JS fades in only content that starts below the fold. */
+.js:not(.reduced-motion) [data-reveal],
+.js:not(.reduced-motion) [data-stagger] > *,
+.js:not(.reduced-motion) [data-split] {
   opacity: 0;
 }
 

@@ -267,14 +267,14 @@ const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'C
     color: var(--work-muted);
   }
 
+  /* The name keeps the readable ink of whatever tone is behind it; the project accent rides along as an underline. */
   .mark {
     font-weight: 600;
     color: var(--work-ink, inherit);
-  }
-
-  /* Lime only reads on Pennie's charcoal tone. */
-  .mark-pennie {
-    color: var(--card-accent);
+    text-decoration: underline;
+    text-decoration-color: var(--card-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.22em;
   }
 
   /* About */

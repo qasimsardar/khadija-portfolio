@@ -1,7 +1,7 @@
 // Home: typed role line, work section tone shifts, cover parallax, title character roll, scroll-reactive marquee.
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
+import { split as splitText } from '../split';
 import type { MotionCtx } from '../motion';
 import { DUR, EASE } from '../motion';
 
@@ -13,7 +13,7 @@ export default function home(ctx: MotionCtx) {
   // Role line types itself in after the intro.
   const role = document.querySelector<HTMLElement>('[data-typed]');
   if (role && !reduced) {
-    const split = SplitText.create(role, { type: 'chars' });
+    const split = splitText(role, { type: 'chars' });
     gsap.set(split.chars, { opacity: 0 });
     ctx.intro.then(() => gsap.to(split.chars, { opacity: 1, duration: 0.01, stagger: 0.035, delay: 0.5 }));
   }
@@ -53,7 +53,7 @@ export default function home(ctx: MotionCtx) {
 
     // Project titles roll character by character on hover.
     gsap.utils.toArray<HTMLElement>('[data-chars]').forEach((el) => {
-      const split = SplitText.create(el, { type: 'chars', mask: 'chars' });
+      const split = splitText(el, { type: 'chars', mask: 'chars' });
       const roll = () =>
         gsap.fromTo(split.chars, { yPercent: 100 }, { yPercent: 0, duration: 0.7, ease: EASE.out, stagger: 0.025, overwrite: true });
       const card = el.closest('[data-card]');

@@ -4,6 +4,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 import Lenis from 'lenis';
+import { split } from './split';
 import { initCursor } from './ui/cursor';
 import { initMagnetic } from './ui/magnetic';
 import { initNav } from './ui/nav';
@@ -70,9 +71,14 @@ function stopLenis() {
 function primitives(ctx: MotionCtx) {
   const { reduced } = ctx;
   const enter = (el: Element, start = 'top 88%') => ({ trigger: el, start, toggleActions: 'play none none none' });
+  // Reduced motion: content already on screen stays put; content below the fold gets a plain fade.
+  const calmFade = (targets: Element | HTMLCollection, trigger: Element) => {
+    if (ScrollTrigger.isInViewport(trigger)) return;
+    gsap.from(targets, { opacity: 0, duration: DUR.s, ease: 'none', scrollTrigger: enter(trigger) });
+  };
 
   gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
-    if (reduced) return void gsap.to(el, { opacity: 1, duration: DUR.s, scrollTrigger: enter(el) });
+    if (reduced) return calmFade(el, el);
     if (el.dataset.reveal === 'clip') {
       const img = el.querySelector('img, video');
       const tl = gsap.timeline({ scrollTrigger: enter(el, 'top 85%') });
@@ -84,23 +90,23 @@ function primitives(ctx: MotionCtx) {
   });
 
   gsap.utils.toArray<HTMLElement>('[data-stagger]').forEach((el) => {
-    const items = el.children;
-    gsap.to(items, {
+    if (reduced) return calmFade(el.children, el);
+    gsap.to(el.children, {
       opacity: 1,
-      y: reduced ? undefined : 0,
-      duration: reduced ? DUR.s : DUR.l,
+      y: 0,
+      duration: DUR.l,
       ease: EASE.out,
-      stagger: reduced ? 0 : Number(el.dataset.stagger) || 0.08,
+      stagger: Number(el.dataset.stagger) || 0.08,
       scrollTrigger: enter(el),
     });
   });
 
   gsap.utils.toArray<HTMLElement>('[data-split]').forEach((el) => {
-    if (reduced) return void gsap.to(el, { opacity: 1, duration: DUR.s, scrollTrigger: enter(el) });
+    if (reduced) return calmFade(el, el);
     // "intro" blocks play once the preloader has finished; others play as they scroll in.
     const intro = el.dataset.split === 'intro';
     let played = false;
-    SplitText.create(el, {
+    split(el, {
       type: 'lines',
       mask: 'lines',
       autoSplit: true,
@@ -120,18 +126,23 @@ function primitives(ctx: MotionCtx) {
     });
   });
 
-  // Words fade from 15% to 100% as the block scrolls through the viewport.
+  // Words fade from 15% to 100% as the block scrolls through the viewport. They stay at full strength until the
+  // block is about to enter the screen, so the dimmed state is only ever seen mid-reveal.
   gsap.utils.toArray<HTMLElement>('[data-words]').forEach((el) => {
     if (reduced) return;
-    SplitText.create(el, {
+    split(el, {
       type: 'words',
       autoSplit: true,
       onSplit(self) {
-        return gsap.fromTo(
-          self.words,
-          { opacity: 0.15 },
-          { opacity: 1, ease: 'none', stagger: 0.1, scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } },
-        );
+        const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 80%', end: 'bottom 45%', scrub: true } });
+        tl.fromTo(self.words, { opacity: 0.15 }, { opacity: 1, ease: 'none', stagger: 0.1, immediateRender: false });
+        ScrollTrigger.create({
+          trigger: el,
+          start: 'top bottom+=200',
+          onEnter: () => tl.progress() === 0 && gsap.set(self.words, { opacity: 0.15 }),
+          onLeaveBack: () => gsap.set(self.words, { opacity: 1 }),
+        });
+        return tl;
       },
     });
   });
@@ -218,15 +229,23 @@ async function init() {
     pages[page]?.(ctx);
   });
 
-  // Land hash links (e.g. /#about) precisely now that layout and fonts are final.
+  ScrollTrigger.refresh();
+
+  // Land hash links (e.g. /#about) once fonts, splits and pin spacers have settled the layout.
   if (location.hash.length > 1) {
     const target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
     if (target) {
-      if (lenis) lenis.scrollTo(target, { offset: -72, immediate: true, force: true });
-      else window.scrollTo({ top: target.getBoundingClientRect().top + scrollY - 72 });
+      const land = () => {
+        const top = target.getBoundingClientRect().top + window.scrollY - 72;
+        if (lenis) lenis.scrollTo(top, { immediate: true, force: true });
+        else window.scrollTo({ top });
+      };
+      land();
+      // Late layout (images decoding, a second refresh) can still move it; correct once more.
+      requestAnimationFrame(() => requestAnimationFrame(land));
+      setTimeout(land, 400);
     }
   }
-  ScrollTrigger.refresh();
 }
 
 function destroy() {

@@ -1,7 +1,7 @@
 // Pennie: phones rise with depth and tilt toward the mouse, live wallet chart, tilting competitor cards,
 // liquid palette fills, typed specimen, insights that check off one by one.
 import gsap from 'gsap';
-import { SplitText } from 'gsap/SplitText';
+import { split as splitText } from '../split';
 import type { MotionCtx } from '../motion';
 import { DUR, EASE } from '../motion';
 import { heroParallax } from './shared';
@@ -70,7 +70,7 @@ export default function pennie(ctx: MotionCtx) {
     const tl = gsap.timeline({ scrollTrigger: { trigger: spec, start: 'top 75%', toggleActions: 'play none none none' } });
     if (aa1) tl.from(aa1, { scale: 0.6, opacity: 0, duration: DUR.l + 0.3, ease: EASE.out, transformOrigin: '70% 60%' }, 0);
     if (glyphs) {
-      const split = SplitText.create(glyphs, { type: 'chars' });
+      const split = splitText(glyphs, { type: 'chars' });
       tl.from(split.chars, { opacity: 0, duration: 0.01, stagger: 0.022 }, 0.2);
     }
   }

@@ -1,6 +1,6 @@
 // Tiffin: floating hero, research cards dealt into place, moodboard zoom/drift, SAATH logo drawn right to left.
 import gsap from 'gsap';
-import { SplitText } from 'gsap/SplitText';
+import { split as splitText } from '../split';
 import type { MotionCtx } from '../motion';
 import { DUR, EASE } from '../motion';
 import { heroParallax } from './shared';
@@ -56,7 +56,7 @@ export default function tiffin(ctx: MotionCtx) {
       else tl.fromTo(logo, { clipPath: 'inset(0 0 0 100%)' }, { clipPath: 'inset(0 0 0 0%)', duration: 1.8, ease: EASE.inOut });
     }
     if (word && !reduced) {
-      const split = SplitText.create(word, { type: 'chars', mask: 'chars' });
+      const split = splitText(word, { type: 'chars', mask: 'chars' });
       tl.from(split.chars, { yPercent: 100, duration: DUR.m, ease: EASE.out, stagger: 0.06 }, 0.4);
     }
   }

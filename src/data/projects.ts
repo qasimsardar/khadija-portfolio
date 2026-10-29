@@ -47,7 +47,8 @@ export const projects: Project[] = [
       'is a modern commuter food carrier inspired by Lahore’s rich food culture, celebrating the tradition of sharing homemade meals, eating together, and connecting with others through food.',
     href: '/tiffin',
     accent: '#e96b4d',
-    tone: { bg: '#c9654d', ink: '#1c0f0b', muted: 'rgba(28,15,11,0.74)' },
+    // Light text on a deep coral: dark text can't reach 4.5:1 on mid-tone coral.
+    tone: { bg: '#ad4f38', ink: '#fff8f3', muted: '#fff8f3' },
     cover: { src: 'home/tiffin.jpg', alt: 'Coral Tiffin lunchbox open to show rice and four steel containers' },
     hero: { src: 'tiffin/hero.jpg', alt: 'Coral SAATH tiffin lunchbox open with rice and four containers, beside the SAATH and tiffin logos' },
     band: { src: 'work/tiffin.jpg', alt: 'Coral Tiffin lunchbox with its lid lifted', bg: '#fafbfd', marker: '#9c4747', dark: false },

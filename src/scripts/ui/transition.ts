@@ -33,8 +33,10 @@ export function initTransitions() {
       covering = true;
       // y: 0 clears the pixel offset GSAP would otherwise read from the CSS translateY(100%) start state.
       // The tween is wrapped in a plain Promise: a GSAP tween resolves with itself, which Promise.all would re-adopt forever.
+      // A timer backs up onComplete so navigation never waits on animation frames (paused in background tabs).
       const cover = new Promise<void>((resolve) => {
         gsap.fromTo(wipe, { y: 0, yPercent: 100 }, { y: 0, yPercent: 0, duration: 0.75, ease: 'power3.inOut', overwrite: true, onComplete: resolve });
+        setTimeout(resolve, 900);
       });
       await Promise.all([cover, original()]);
     };
