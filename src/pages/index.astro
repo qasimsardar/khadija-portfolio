@@ -2,171 +2,390 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import Img from '../components/Img.astro';
+import Button from '../components/Button.astro';
+import Marquee from '../components/Marquee.astro';
+import TeaserCard from '../components/TeaserCard.astro';
 import { projects } from '../data/projects';
+import { site } from '../data/site';
+
+const { about } = site;
+const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'CAD', 'Packaging', 'Branding'];
 ---
 
-<Base>
+<Base page="home">
+  <div class="backdrop" data-backdrop aria-hidden="true"></div>
   <Hero workHref="#work" />
 
-  <section id="work" class="container projects" aria-label="Selected work">
+  <section id="work" class="work" aria-labelledby="work-title" data-work>
+    <div class="container-wide work-head">
+      <h2 id="work-title" class="label">Selected work</h2>
+      <p class="label count">({String(projects.length).padStart(2, '0')})</p>
+    </div>
     {
-      projects.map((p) => (
-        <article class="project" style={`--accent: ${p.color}`}>
-          <div class="meta">
-            <p class="category">{p.category}</p>
-            <h2 class="title">
-              {p.href ? <a href={p.href}>{p.name}</a> : p.name}
-            </h2>
-            {p.href ? (
-              <a class="btn-outline" href={p.href} style={`--btn-border: ${p.button.border}; --btn-text: ${p.button.text}`}>
-                Explore<span class="visually-hidden"> {p.name}</span>
-              </a>
-            ) : (
-              <span class="btn-outline" aria-disabled="true" style={`--btn-border: ${p.button.border}; --btn-text: ${p.button.text}`}>
-                Coming soon
-              </span>
-            )}
-            <p class="description">
-              <strong style={`color: ${p.markColor}; font-weight: ${p.markWeight}`}>{p.mark}</strong> {p.description}
-            </p>
-          </div>
-          <div class="cover" style={`--cover-max: ${p.cover.maxWidth}px`}>
-            {p.href ? (
-              <a href={p.href} tabindex="-1" aria-hidden="true">
-                <Img src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1280px) 800px, (min-width: 800px) 64vw, 100vw" />
-              </a>
-            ) : (
-              <Img src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1280px) 800px, (min-width: 800px) 64vw, 100vw" />
-            )}
-          </div>
-        </article>
-      ))
+      projects.map((p, i) =>
+        p.href ? (
+          <article
+            class="card"
+            data-card
+            data-accent={p.accent}
+            data-tone={p.tone.bg}
+            data-ink={p.tone.ink}
+            data-muted={p.tone.muted}
+            style={`--tone: ${p.tone.bg}; --tone-ink: ${p.tone.ink}; --tone-muted: ${p.tone.muted}; --card-accent: ${p.accent}`}
+            aria-labelledby={`card-${p.slug}`}
+          >
+            <div class="container-wide card-inner">
+              <header class="card-head">
+                <span class="num" aria-hidden="true">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 id={`card-${p.slug}`} class="title">
+                  <a href={p.href} data-morph data-cursor="View" data-chars>
+                    {p.name}
+                  </a>
+                </h3>
+                <span class="pill">{p.category}</span>
+              </header>
+              <div class="frame-wrap">
+                {p.slug === 'prisma' && <span class="glow" aria-hidden="true" />}
+                <a class="frame" href={p.href} data-morph data-cursor="View" tabindex="-1" aria-hidden="true" data-reveal="clip">
+                  <div class="frame-media" transition:name={`hero-${p.slug}`}>
+                    <Img src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1440px) 1340px, 92vw" data-parallax-img="" />
+                  </div>
+                </a>
+              </div>
+              <div class="card-foot">
+                <p class="desc">
+                  <strong class:list={['mark', `mark-${p.slug}`]}>{p.mark}</strong> {p.description}
+                </p>
+                <Button href={p.href} variant="secondary" cursor="Open" accent={p.accent}>
+                  View case study
+                </Button>
+              </div>
+            </div>
+          </article>
+        ) : (
+          <TeaserCard project={p} index={i} />
+        ),
+      )
     }
   </section>
 
-  <section id="about" class="container about" aria-labelledby="about-title">
-    <h2 id="about-title">I’m dedicated to crafting meaningful visual experiences through a multidisciplinary design approach.</h2>
-    <a class="btn-outline" href="/work">Discover my skills and passions</a>
+  <Marquee items={disciplines} />
+
+  <section id="about" class="about container-wide" aria-labelledby="about-title">
+    <p class="label kicker">About</p>
+    <div class="about-grid">
+      <figure class="portrait" data-reveal="clip">
+        <Img src="about/headshot.jpg" alt="Portrait of Khadija Sardar" sizes="(min-width: 900px) 40vw, 92vw" />
+      </figure>
+      <div class="about-body">
+        <h2 id="about-title" class="statement" data-words>{about.statement}</h2>
+        {about.bio && <p class="copy bio">{about.bio}</p>}
+        <div class="facts">
+          <div>
+            <h3 class="label fact-title">Skills</h3>
+            <ul class="skills" data-stagger="0.05">
+              {about.skills.map((s) => <li class="pill">{s}</li>)}
+            </ul>
+          </div>
+          {
+            about.tools.length > 0 && (
+              <div>
+                <h3 class="label fact-title">Tools</h3>
+                <ul class="skills">
+                  {about.tools.map((s) => (
+                    <li class="pill">{s}</li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+          {
+            about.education.length > 0 && (
+              <div>
+                <h3 class="label fact-title">Education</h3>
+                <ul class="edu">
+                  {about.education.map((e) => (
+                    <li>
+                      <strong>{e.school}</strong> {e.detail}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          }
+        </div>
+        <div class="about-actions">
+          <Button href="#contact">Let’s work together</Button>
+          <Button href="/work" variant="link" magnetic={false}>See every project</Button>
+        </div>
+      </div>
+    </div>
   </section>
 </Base>
 
 <style>
-  .project {
-    display: grid;
-    grid-template-columns: minmax(240px, 337px) minmax(0, 1fr);
-    gap: 50px;
-    padding-top: 50px;
-    padding-bottom: 80px;
-    border-top: 1px solid var(--accent);
+  /* Fixed colour layer the work section tweens through (keeps repaints off the content). */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: var(--paper);
   }
 
-  .meta {
+  .work {
+    --work-ink: var(--ink);
+    --work-muted: var(--ink-2);
+    position: relative;
+    padding-top: clamp(40px, 6vw, 96px);
+  }
+
+  :global(.js:not(.reduced-motion)) .work {
+    color: var(--work-ink);
+  }
+
+  .work-head {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 19px;
+    justify-content: space-between;
+    padding-bottom: clamp(20px, 3vw, 40px);
+    color: inherit;
   }
 
-  /* "Caption 2" text style: Lora Medium 16, underlined */
-  .category {
-    color: var(--accent);
-    font-family: var(--font-label);
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 1.03;
-    letter-spacing: var(--tracking-tight);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
+  .count {
+    opacity: 0.6;
   }
 
-  /* "Heading" text style: Montserrat Light 50 */
+  /* Without JS (or with reduced motion) each card carries its own tone. */
+  .card {
+    padding-block: clamp(56px, 7vw, 120px);
+    background: var(--tone);
+    color: var(--tone-ink);
+  }
+
+  :global(.js:not(.reduced-motion)) .card {
+    background: transparent;
+    color: inherit;
+  }
+
+  .card-inner {
+    display: grid;
+    gap: clamp(22px, 2.6vw, 36px);
+  }
+
+  .card-head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 16px clamp(16px, 3vw, 40px);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+  }
+
   .title {
-    color: var(--accent);
-    font-family: var(--font-sans);
     font-weight: 300;
-    font-size: var(--fs-display);
-    line-height: 1.2;
-    letter-spacing: var(--tracking-tight);
+    font-size: var(--fs-mega);
+    line-height: 0.92;
+    letter-spacing: -0.055em;
   }
 
   .title a {
-    text-decoration: none;
+    display: inline-block;
   }
 
-  .title a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
+  .frame {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    isolation: isolate;
   }
 
-  .description {
-    margin-top: auto;
-    padding-top: 24px;
-    font-weight: 300;
-    font-size: var(--fs-body);
-    line-height: 1.5;
+  .frame-media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
   }
 
-  .cover {
-    justify-self: end;
+  .frame-media :global(img) {
     width: 100%;
-    max-width: var(--cover-max);
+    height: 118%;
+    margin-top: -9%;
+    object-fit: cover;
+    transition: transform var(--dur-3) var(--ease-out);
   }
 
-  .cover :global(img) {
-    width: 100%;
-    border-radius: 4px;
+  .frame:hover .frame-media :global(img) {
+    transform: scale(1.04);
   }
 
-  .about {
+  .frame-wrap {
+    position: relative;
+    isolation: isolate;
+  }
+
+  /* Prisma: slow RGB glow bleeding out from behind the black product frame. */
+  .glow {
+    position: absolute;
+    inset: 8% 14%;
+    z-index: -1;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #dd1886, #7d4c9e, #3e82c4, #2ee6c9, #d5ee74, #dd1886);
+    filter: blur(70px);
+    opacity: 0.5;
+    animation: spin 14s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(1turn);
+    }
+  }
+
+  .card-foot {
     display: grid;
-    justify-items: start;
-    gap: 50px;
-    padding-top: 30px;
-    padding-bottom: 40px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 24px clamp(32px, 6vw, 120px);
   }
 
-  .about h2 {
-    max-width: 855px;
-    font-family: var(--font-sans);
+  .desc {
+    max-width: 52ch;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--tone-muted);
+  }
+
+  :global(.js:not(.reduced-motion)) .desc {
+    color: var(--work-muted);
+  }
+
+  .mark {
+    font-weight: 600;
+    color: var(--work-ink, inherit);
+  }
+
+  /* Lime only reads on Pennie's charcoal tone. */
+  .mark-pennie {
+    color: var(--card-accent);
+  }
+
+  /* About */
+  .about {
+    padding-block: var(--section-gap);
+  }
+
+  .kicker {
+    margin-bottom: clamp(28px, 4vw, 56px);
+    color: var(--ink-3);
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(32px, 6vw, 112px);
+    align-items: start;
+  }
+
+  .portrait {
+    position: sticky;
+    top: 110px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    aspect-ratio: 3 / 4;
+  }
+
+  .portrait :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .statement {
     font-weight: 300;
-    font-size: var(--fs-display);
-    line-height: 1.2;
-    letter-spacing: var(--tracking-tight);
+    font-size: var(--fs-h2);
+    line-height: 1.08;
+    letter-spacing: -0.035em;
   }
 
-  @media (max-width: 800px) {
-    .project {
+  .bio {
+    margin-top: clamp(24px, 3vw, 40px);
+    max-width: 58ch;
+  }
+
+  .facts {
+    display: grid;
+    gap: clamp(24px, 3vw, 36px);
+    margin-top: clamp(40px, 5vw, 72px);
+  }
+
+  .fact-title {
+    margin-bottom: 14px;
+    color: var(--ink-3);
+  }
+
+  .skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    list-style: none;
+  }
+
+  .skills .pill {
+    padding: 10px 16px;
+    border-color: var(--line);
+    color: var(--ink);
+  }
+
+  .edu {
+    display: grid;
+    gap: 8px;
+    list-style: none;
+    color: var(--ink-2);
+  }
+
+  .about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 28px;
+    margin-top: clamp(40px, 5vw, 64px);
+  }
+
+  @media (max-width: 900px) {
+    .about-grid {
       grid-template-columns: 1fr;
-      gap: 0;
-      padding-top: 32px;
-      padding-bottom: 48px;
     }
 
-    /* Mobile order: label, title, button, image, description. */
-    .meta {
-      display: contents;
+    .portrait {
+      position: relative;
+      top: 0;
+      max-width: 420px;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .card-head {
+      grid-template-columns: auto 1fr;
     }
 
-    .category {
-      margin-bottom: 14px;
+    .card-head .pill {
+      grid-column: 1 / -1;
     }
 
-    .title {
-      margin-bottom: 14px;
+    .frame {
+      aspect-ratio: 4 / 3;
     }
 
-    .btn-outline {
-      margin-bottom: 24px;
-    }
-
-    .cover {
-      justify-self: stretch;
-      max-width: none;
-    }
-
-    .description {
-      order: 5;
-      padding-top: 20px;
+    .card-foot {
+      grid-template-columns: 1fr;
     }
   }
 </style>

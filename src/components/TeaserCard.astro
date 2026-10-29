@@ -1,0 +1,187 @@
+---
+// Locked "case study coming soon" card for projects without a case study yet.
+import Img from './Img.astro';
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project: p, index } = Astro.props;
+const preview = p.slug === 'gosafe' ? 'work/gosafe.png' : p.cover.src;
+---
+
+<article
+  class:list={['teaser', `teaser-${p.slug}`]}
+  data-card
+  data-accent={p.accent}
+  data-tone={p.tone.bg}
+  data-ink={p.tone.ink}
+  data-muted={p.tone.muted}
+  style={`--tone: ${p.tone.bg}; --tone-ink: ${p.tone.ink}; --tone-muted: ${p.tone.muted}; --card-accent: ${p.accent}`}
+  aria-labelledby={`teaser-${p.slug}`}
+>
+  <div class="container-wide inner">
+    <header class="head">
+      <span class="num" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+      <h3 id={`teaser-${p.slug}`} class="title">{p.name}</h3>
+      <span class="pill">{p.category}</span>
+    </header>
+    <div class="frame" data-reveal="clip" data-cursor="Soon">
+      <div class="blur">
+        <Img src={preview} alt={p.cover.alt} sizes="(min-width: 1440px) 1340px, 92vw" />
+      </div>
+      <div class="shimmer" aria-hidden="true"></div>
+      <div class="lock">
+        <span class="lock-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22"><rect x="5" y="10.5" width="14" height="10" rx="2.2" fill="none" stroke="currentColor" stroke-width="1.5"></rect><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5" fill="none" stroke="currentColor" stroke-width="1.5"></path></svg>
+        </span>
+        <span class="label">Case study coming soon</span>
+      </div>
+    </div>
+    <p class="desc">
+      <strong style={`color: ${p.accent}; font-weight: ${p.slug === 'gosafe' ? 700 : 600}`}>{p.mark}</strong>
+      {p.description}
+    </p>
+  </div>
+</article>
+
+<style>
+  .teaser {
+    padding-block: clamp(56px, 7vw, 110px);
+    background: var(--tone);
+    color: var(--tone-ink);
+  }
+
+  :global(.js:not(.reduced-motion)) .teaser {
+    background: transparent;
+    color: inherit;
+  }
+
+  .inner {
+    display: grid;
+    gap: clamp(22px, 2.6vw, 36px);
+  }
+
+  .head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 16px clamp(16px, 3vw, 40px);
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.08em;
+    opacity: 0.7;
+  }
+
+  .title {
+    font-weight: 300;
+    font-size: var(--fs-h2);
+    line-height: 1;
+    letter-spacing: -0.04em;
+  }
+
+  .frame {
+    position: relative;
+    aspect-ratio: 21 / 8;
+    border-radius: var(--radius);
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--tone);
+  }
+
+  .blur {
+    position: absolute;
+    inset: -6%;
+    filter: blur(18px) saturate(1.1);
+    opacity: 0.85;
+  }
+
+  .blur :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .teaser-gosafe .blur :global(img) {
+    object-fit: contain;
+    object-position: 70% 50%;
+  }
+
+  /* Slow light sweep across the locked preview. */
+  .shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.28) 50%, transparent 70%);
+    transform: translateX(-100%);
+    animation: sweep 4.8s var(--ease-inout) infinite;
+    mix-blend-mode: soft-light;
+  }
+
+  @keyframes sweep {
+    0% {
+      transform: translateX(-100%);
+    }
+    60%,
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .lock {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 14px;
+    color: var(--white);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .lock-icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    background: rgba(20, 20, 20, 0.62);
+  }
+
+  .lock .label {
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: rgba(20, 20, 20, 0.62);
+    text-shadow: none;
+  }
+
+  .desc {
+    max-width: 56ch;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    color: var(--tone-muted);
+  }
+
+  :global(.js:not(.reduced-motion)) .desc {
+    color: var(--work-muted, var(--tone-muted));
+  }
+
+  @media (max-width: 720px) {
+    .head {
+      grid-template-columns: auto 1fr;
+    }
+
+    .head .pill {
+      grid-column: 1 / -1;
+    }
+
+    .frame {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
