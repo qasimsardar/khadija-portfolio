@@ -1,0 +1,144 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'link';
+  /** Pull toward the cursor on hover (desktop). */
+  magnetic?: boolean;
+  /** Label for the custom cursor ("Open", "View", ...). */
+  cursor?: string;
+  /** Colour for the primary fill / link underline; defaults to the current text colour. */
+  accent?: string;
+  external?: boolean;
+  class?: string;
+  'aria-label'?: string;
+}
+
+const { href, variant = 'primary', magnetic = variant === 'primary', cursor = 'Open', accent, external, class: className, ...rest } = Astro.props;
+const label = await Astro.slots.render('default');
+const text = label.replace(/<[^>]+>/g, '').trim();
+---
+
+<!-- The rolled copy is a pseudo-element, so the accessible name is set once via aria-label. -->
+<a
+  href={href}
+  aria-label={rest['aria-label'] ?? text}
+  class:list={['btn', `btn--${variant}`, className]}
+  data-magnetic={magnetic ? '' : undefined}
+  data-cursor={cursor}
+  style={accent ? `--btn-accent: ${accent}` : undefined}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener' : undefined}
+  {...rest}
+>
+  <span class="btn__roll" data-text={text}><span set:html={label} /></span>
+  <span class="btn__icon" aria-hidden="true">
+    <svg viewBox="0 0 16 16" width="16" height="16"><path d="M3 8h9M8.5 3.5 13 8l-4.5 4.5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+  </span>
+</a>
+
+<style>
+  .btn {
+    --btn-accent: currentColor;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    width: fit-content;
+    min-height: 48px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-small);
+    line-height: 1;
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Text roll: the label slides up and a copy slides in from below. */
+  .btn__roll {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    padding-block: 0.15em;
+  }
+
+  .btn__roll > span {
+    display: block;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .btn__roll::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    padding-block: 0.15em;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .btn:hover .btn__roll > span,
+  .btn:hover .btn__roll::after,
+  .btn:focus-visible .btn__roll > span,
+  .btn:focus-visible .btn__roll::after {
+    transform: translateY(-100%);
+  }
+
+  .btn__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .btn:hover .btn__icon {
+    transform: rotate(-45deg);
+  }
+
+  .btn--primary {
+    padding: 7px 7px 7px 26px;
+    border-radius: 999px;
+    background: var(--btn-bg, var(--page-fg));
+    color: var(--btn-fg, var(--page-bg));
+  }
+
+  .btn--primary .btn__icon {
+    background: var(--btn-fg, var(--page-bg));
+    color: var(--btn-bg, var(--page-fg));
+  }
+
+  .btn--secondary {
+    padding: 6px 6px 6px 24px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+  }
+
+  .btn--secondary .btn__icon {
+    border: 1px solid currentColor;
+  }
+
+  .btn--link {
+    gap: 10px;
+    min-height: 44px;
+  }
+
+  .btn--link .btn__icon {
+    width: 28px;
+    height: 28px;
+    border: 1px solid currentColor;
+  }
+
+  .btn--link .btn__roll {
+    box-shadow: inset 0 -1px 0 0 var(--btn-accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn__roll > span,
+    .btn__roll::after,
+    .btn__icon {
+      transition: none;
+    }
+  }
+</style>

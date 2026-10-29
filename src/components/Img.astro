@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import { asset } from '../lib/images';
 
 interface Props {
@@ -8,29 +8,34 @@ interface Props {
   sizes?: string;
   class?: string;
   eager?: boolean;
+  /** Extra attributes for the <img> (e.g. data hooks for motion). */
+  [key: `data-${string}`]: string | undefined;
 }
 
-const { src, alt, sizes = '(min-width: 1280px) 1180px, 100vw', class: className, eager = false } = Astro.props;
+const { src, alt, sizes = '(min-width: 1280px) 1180px, 100vw', class: className, eager = false, ...rest } = Astro.props;
 const image = asset(src);
 // Responsive widths never exceed the exported source, so nothing is upscaled.
 const widths = [400, 640, 960, 1280, 1600, 2000, 2560].filter((w) => w < image.width);
 widths.push(image.width);
 // Exports are 2x, so the intrinsic (CSS) size is half the file size: images never grow past their Figma size
-// unless a stylesheet stretches them on purpose (full-bleed sections, grids).
+// unless a stylesheet stretches them on purpose (full-bleed sections, grids). width/height also reserve space
+// before the file loads, so anchors land where they should.
 const width = Math.round(image.width / 2);
 const height = Math.round(image.height / 2);
 ---
 
-<Image
+<Picture
   src={image}
   alt={alt}
+  formats={['avif', 'webp']}
   width={width}
   height={height}
   widths={widths}
   sizes={sizes}
   class={className}
-  quality={82}
+  quality={78}
   loading={eager ? 'eager' : 'lazy'}
   decoding={eager ? 'sync' : 'async'}
   fetchpriority={eager ? 'high' : 'auto'}
+  {...rest}
 />

@@ -1,89 +1,151 @@
 ---
-import { site, type Theme } from '../data/site';
+import { site } from '../data/site';
 
-interface Props {
-  theme: Theme;
-}
-
-const { theme } = Astro.props;
-const links = [
-  { label: 'Email', href: site.contact.email, color: 'var(--tiffin)', dark: 'var(--lime)' },
-  { label: 'Behance', href: site.contact.behance, color: 'var(--skillender)', dark: 'var(--violet)' },
-  { label: 'LinkedIn', href: site.contact.linkedin, color: 'var(--prisma)', dark: 'var(--white)' },
-];
+const { email, behance, linkedin } = site.contact;
+const secondary = [
+  { label: 'Behance', href: behance },
+  { label: 'LinkedIn', href: linkedin },
+].filter((l) => l.href);
 const year = new Date().getFullYear();
 ---
 
-<footer id="contact" class:list={['site-footer', `on-${theme}`]}>
-  <div class="container">
-    <ul class="links">
-      {
-        links.map((l) => (
-          <li style={`--link: ${theme === 'dark' ? l.dark : l.color}`}>
-            {l.href ? (
-              <a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel="noopener">
+<footer id="contact" class="site-footer" data-accent="#f4f1ea">
+  <div class="container-wide">
+    <p class="label kicker">Contact</p>
+    <h2 class="headline" data-split="lines">
+      Let’s work <span class="accent">together</span>
+    </h2>
+    {
+      email && (
+        <a class="email" href={`mailto:${email}`} data-magnetic data-cursor="Write">
+          <span class="email-text">{email}</span>
+          <span class="email-arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24">
+              <path d="M5 19 19 5M8 5h11v11" fill="none" stroke="currentColor" stroke-width="1.4" />
+            </svg>
+          </span>
+        </a>
+      )
+    }
+    <div class="bottom">
+      <ul class="social">
+        {
+          secondary.map((l) => (
+            <li>
+              <a class="link-draw" href={l.href} target="_blank" rel="noopener">
                 {l.label}
+                <span class="visually-hidden"> (opens in a new tab)</span>
               </a>
-            ) : (
-              <span>{l.label}</span>
-            )}
-          </li>
-        ))
-      }
-    </ul>
-    <p class="legal">© {site.name} {year} All Rights Reserved</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="legal">© {site.name} {year} · All rights reserved</p>
+      <a class="top link-draw" href="#main" data-scroll-top>Back to top ↑</a>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    margin-top: var(--section-gap);
-    padding-bottom: clamp(48px, 6vw, 80px);
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(96px, 12vw, 180px) clamp(28px, 3vw, 40px);
+    background: #141414;
+    color: #f4f1ea;
+    --page-fg: #f4f1ea;
+    --line: rgba(244, 241, 234, 0.16);
+    --focus: #f4f1ea;
   }
 
-  .links {
+  .kicker {
+    color: rgba(244, 241, 234, 0.6);
+    margin-bottom: clamp(20px, 2.4vw, 32px);
+  }
+
+  .headline {
+    font-weight: 300;
+    font-size: var(--fs-mega);
+    line-height: 0.95;
+    letter-spacing: var(--tracking-display);
+  }
+
+  .email {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(14px, 2vw, 28px);
+    margin-top: clamp(40px, 5vw, 72px);
+    padding: clamp(14px, 1.6vw, 22px) clamp(14px, 1.6vw, 22px) clamp(14px, 1.6vw, 22px) clamp(24px, 2.6vw, 40px);
+    border-radius: 999px;
+    background: #f4f1ea;
+    color: #141414;
+    font-weight: 400;
+    font-size: clamp(1.125rem, 0.6rem + 2.2vw, 2.5rem);
+    letter-spacing: -0.02em;
+    max-width: 100%;
+  }
+
+  .email-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .email-arrow {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: clamp(40px, 4.4vw, 64px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #141414;
+    color: #f4f1ea;
+    transition: transform var(--dur-2) var(--ease-out);
+  }
+
+  .email:hover .email-arrow {
+    transform: rotate(45deg);
+  }
+
+  .bottom {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 16px 40px;
+    margin-top: clamp(72px, 10vw, 140px);
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .social {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px 32px;
-    padding-top: 30px;
-    padding-bottom: clamp(56px, 10vw, 150px);
-    border-top: 1px solid #4f4f4f;
+    gap: clamp(20px, 3vw, 40px);
     list-style: none;
+    font-weight: 400;
+    font-size: var(--fs-lead);
+    letter-spacing: -0.01em;
   }
 
-  /* "Heading" text style: Montserrat Light 50 / 1.2 */
-  .links a,
-  .links span {
-    color: var(--link);
-    font-family: var(--font-sans);
-    font-weight: 300;
-    font-size: clamp(2rem, 1.3rem + 2.8vw, 3.125rem);
-    line-height: 1.2;
-    letter-spacing: var(--tracking-tight);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
+  .social a {
+    display: inline-block;
+    padding-block: 6px;
   }
 
-  .links a:hover {
-    text-decoration-thickness: 2px;
+  .legal,
+  .top {
+    color: rgba(244, 241, 234, 0.6);
+    font-family: var(--font-mono);
+    font-size: var(--fs-label);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
-  .legal {
-    font-family: var(--font-sans);
-    font-weight: 300;
-    font-size: clamp(1.25rem, 0.8rem + 3vw, 3.125rem);
-    line-height: 1.2;
-    letter-spacing: var(--tracking-tight);
+  .top {
+    padding-block: 10px;
   }
 
-  .on-dark .links {
-    border-top-color: rgba(255, 255, 255, 0.35);
-  }
-
-  @media (max-width: 600px) {
-    .links {
-      flex-direction: column;
+  @media (max-width: 720px) {
+    .bottom {
+      grid-template-columns: 1fr;
     }
   }
 </style>

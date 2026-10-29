@@ -1,6 +1,9 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  // Add `site: 'https://your-domain.com'` once the production domain is known.
+  site: 'https://khadijasardar.com',
+  integrations: [sitemap()],
   build: { format: 'directory' },
+  devToolbar: { enabled: false },
 });

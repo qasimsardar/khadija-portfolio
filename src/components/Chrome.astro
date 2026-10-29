@@ -1,0 +1,161 @@
+---
+// Site-wide overlays. The cursor, grain and page wipe persist across client-side navigations.
+import { site } from '../data/site';
+
+const letters = [...site.name];
+---
+
+<div class="cursor" aria-hidden="true" transition:persist="cursor" data-cursor-el>
+  <span class="cursor__ring"><span class="cursor__label" data-cursor-label></span></span>
+</div>
+
+<div class="grain" aria-hidden="true" transition:persist="grain"></div>
+
+<div class="wipe" aria-hidden="true" transition:persist="wipe" data-wipe></div>
+
+<div class="preloader" aria-hidden="true" data-preloader>
+  <p class="preloader__name">
+    {letters.map((ch) => <span class="preloader__mask"><span class="preloader__char">{ch === ' ' ? ' ' : ch}</span></span>)}
+  </p>
+  <p class="preloader__count"><span data-preloader-count>0</span>%</p>
+</div>
+
+<style>
+  /* Custom cursor: fine pointers only (enabled by JS adding .has-cursor). */
+  .cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 900;
+    pointer-events: none;
+    opacity: 0;
+    mix-blend-mode: difference;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Labelled states use the project accent, so they drop the difference blend. */
+  :global(.cursor-active) .cursor {
+    mix-blend-mode: normal;
+  }
+
+  :global(.has-cursor) .cursor {
+    opacity: 1;
+  }
+
+  :global(.has-cursor.cursor-out) .cursor {
+    opacity: 0;
+  }
+
+  .cursor__ring {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: grid;
+    place-items: center;
+    width: 76px;
+    height: 76px;
+    margin: -38px 0 0 -38px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--cursor-fg, #fefbf4);
+    transform: scale(0.12);
+    transition:
+      transform 0.5s var(--ease-out),
+      background-color 0.4s ease,
+      color 0.4s ease;
+  }
+
+  .cursor__label {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  :global(.cursor-active) .cursor__ring {
+    background: var(--cursor-bg, #141414);
+    transform: scale(1);
+  }
+
+  :global(.cursor-active) .cursor__label {
+    opacity: 1;
+    transition-delay: 0.08s;
+  }
+
+  :global(.cursor-hover) .cursor__ring {
+    transform: scale(0.34);
+  }
+
+  :global(.has-cursor),
+  :global(.has-cursor) :global(a),
+  :global(.has-cursor) :global(button) {
+    cursor: none;
+  }
+
+  /* Film grain: static SVG noise, printed-paper texture. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    pointer-events: none;
+    opacity: 0.055;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Page-transition panel, coloured with the destination's accent. */
+  .wipe {
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+    pointer-events: none;
+    background: var(--wipe, #141414);
+    transform: translateY(100%);
+  }
+
+  /* First-visit intro. */
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    background: #141414;
+    color: #fefbf4;
+  }
+
+  :global(html:not(.js)) .preloader,
+  :global(.skip-preloader) .preloader {
+    display: none;
+  }
+
+  .preloader__name {
+    display: flex;
+    font-weight: 300;
+    font-size: clamp(2.5rem, 1rem + 6vw, 6.5rem);
+    letter-spacing: -0.045em;
+    line-height: 1.1;
+  }
+
+  .preloader__mask {
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .preloader__char {
+    display: inline-block;
+    transform: translateY(110%);
+  }
+
+  .preloader__count {
+    position: absolute;
+    right: var(--gutter);
+    bottom: clamp(20px, 3vw, 40px);
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    letter-spacing: 0.08em;
+    color: rgba(254, 251, 244, 0.6);
+  }
+</style>

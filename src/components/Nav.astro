@@ -1,26 +1,20 @@
 ---
 import { Image } from 'astro:assets';
 import { asset } from '../lib/images';
-import { site, type Theme } from '../data/site';
+import { site } from '../data/site';
 
-interface Props {
-  theme: Theme;
-}
-
-const { theme } = Astro.props;
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-// As rendered in Figma: Home and About are Source Code Pro (About in Medium), Contact uses the Lora "Link 1" style.
 const links = [
-  { href: '/', label: 'Home', color: 'var(--tiffin)', font: 'mono' },
-  { href: '/#about', label: 'About', color: 'var(--ink)', font: 'mono-medium' },
-  { href: '#contact', label: 'Contact', color: 'var(--skillender)', font: 'label' },
+  { href: '/', label: 'Home' },
+  { href: '/#about', label: 'About' },
+  { href: '#contact', label: 'Contact' },
 ];
 ---
 
-<header class:list={['site-nav', `on-${theme}`]}>
-  <div class="container inner">
-    <a class="brand" href="/" aria-label={`${site.name}, home`}>
-      <Image src={asset('home/avatar.png')} alt="" width={50} height={50} widths={[50, 100, 150]} sizes="50px" class="avatar" loading="eager" />
+<header class="site-nav" data-nav>
+  <div class="container-wide inner">
+    <a class="brand" href="/" aria-label={`${site.name}, home`} data-cursor="Home">
+      <Image src={asset('home/avatar.png')} alt="" width={40} height={40} widths={[40, 80, 120]} sizes="40px" class="avatar" loading="eager" />
       <span class="name">{site.name}</span>
     </a>
     <nav aria-label="Main">
@@ -28,7 +22,7 @@ const links = [
         {
           links.map((l) => (
             <li>
-              <a href={l.href} class={l.font} style={`--link: ${l.color}`} aria-current={l.href === path ? 'page' : undefined}>
+              <a href={l.href} class="link-draw" aria-current={l.href === path ? 'page' : undefined}>
                 {l.label}
               </a>
             </li>
@@ -36,111 +30,184 @@ const links = [
         }
       </ul>
     </nav>
+    {
+      site.available && (
+        <a class="status" href="#contact" data-cursor="Say hi">
+          <span class="dot" aria-hidden="true" />
+          <span class="status-text">Available for work</span>
+        </a>
+      )
+    }
   </div>
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
 </header>
 
 <style>
   .site-nav {
-    padding-block: 30px;
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    color: var(--nav-fg, var(--page-fg));
+    transition:
+      transform var(--dur-2) var(--ease-out),
+      color var(--dur-1) ease;
+  }
+
+  /* Translucent blurred bar once the page has scrolled. */
+  .site-nav::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--page-bg) 72%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity var(--dur-1) ease;
+  }
+
+  :global(.nav-scrolled) .site-nav::before {
+    opacity: 1;
+  }
+
+  /* Pages that open on a dark band (Prisma) use a light nav until it gets its paper bar. */
+  :global(html:not(.nav-scrolled) body.nav-on-dark) .site-nav {
+    --nav-fg: #f4f1ea;
+    --line: rgba(244, 241, 234, 0.22);
+  }
+
+  :global(.nav-hidden) .site-nav {
+    transform: translateY(-100%);
   }
 
   .inner {
-    display: flex;
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     gap: 16px;
+    min-height: 76px;
   }
 
   .brand {
     display: flex;
     align-items: center;
-    gap: 20px;
-    text-decoration: none;
-    color: var(--page-fg);
+    gap: 12px;
+    width: fit-content;
   }
 
   .avatar {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
   }
 
-  /* "Body" text style: Montserrat Regular 24 / 1.52 */
   .name {
-    font-family: var(--font-sans);
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 1.52;
-    letter-spacing: var(--tracking-tight);
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
     white-space: nowrap;
   }
 
   ul {
     display: flex;
-    gap: 10px;
+    gap: clamp(18px, 2.4vw, 36px);
     list-style: none;
   }
 
   nav a {
-    color: var(--link);
-    font-size: 16px;
-    line-height: 1.03;
-    letter-spacing: var(--tracking-tight);
+    display: inline-block;
+    padding-block: 10px;
+    font-weight: 500;
+    font-size: 0.9375rem;
+    letter-spacing: 0.005em;
   }
 
-  nav a.mono {
-    font-family: var(--font-mono);
-    font-weight: 400;
-  }
-
-  nav a.mono-medium {
+  .status {
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
     font-family: var(--font-mono);
     font-weight: 500;
+    font-size: var(--fs-label);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
   }
 
-  nav a.label {
-    font-family: var(--font-label);
-    font-weight: 400;
-    text-decoration: none;
+  .dot {
+    position: relative;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2fb36d;
   }
 
-  nav a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 2px;
+  .dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #2fb36d;
+    animation: pulse 2.4s var(--ease-out) infinite;
   }
 
-  .on-dark nav a {
-    color: var(--white);
+  @keyframes pulse {
+    from {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    to {
+      transform: scale(3.2);
+      opacity: 0;
+    }
   }
 
-  .on-dark li:first-child a {
-    color: var(--lime);
+  /* Case-study reading progress, sits on the bottom edge of the nav. */
+  .progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .progress span {
+    display: block;
+    height: 100%;
+    background: var(--progress, var(--accent));
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  @media (max-width: 820px) {
+    .inner {
+      grid-template-columns: 1fr auto;
+    }
+
+    .status {
+      display: none;
+    }
   }
 
   @media (max-width: 480px) {
-    .site-nav {
-      padding-block: 20px;
-    }
-
-    .brand {
-      gap: 10px;
-    }
-
-    .avatar {
-      width: 40px;
-      height: 40px;
+    .inner {
+      min-height: 64px;
     }
 
     .name {
-      font-size: 19px;
-    }
-
-    nav a {
-      font-size: 14px;
+      display: none;
     }
 
     ul {
-      gap: 8px;
+      gap: 20px;
     }
   }
 </style>
