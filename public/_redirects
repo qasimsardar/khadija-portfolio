@@ -1,0 +1,5 @@
+# Redirects for Cloudflare Workers static assets (copied into dist/ by the build).
+# The Figma Sites export used these paths; send anyone with an old link to the new pages.
+/project_prisma-5 /prisma 301
+/project_pennie-3 /pennie 301
+/page-3 /work 301

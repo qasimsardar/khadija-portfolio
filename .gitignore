@@ -4,3 +4,5 @@ dist/
 .DS_Store
 # Figma Sites export (266 MB source file, not part of the site)
 *.site
+.wrangler/
+.dev.vars*

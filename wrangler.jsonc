@@ -1,0 +1,25 @@
+// Cloudflare Workers deployment for the static Astro build. Pages, images and scripts are served straight from
+// static assets; a tiny Worker (worker/index.js) runs only for /video/* to answer byte-range requests for Safari.
+// Build with `npm run build`, then deploy with `npm run deploy` (or connect the GitHub repo in Workers Builds).
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "khadija-portfolio",
+  "main": "./worker/index.js",
+  "compatibility_date": "2026-10-23",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // Only video requests reach the Worker; every other path is served directly (and free).
+    "run_worker_first": ["/video/*"],
+    // Clean URLs: /prisma serves prisma.html, and /prisma/ redirects to /prisma.
+    "html_handling": "auto-trailing-slash",
+    // Unknown paths get dist/404.html with a 404 status.
+    "not_found_handling": "404-page"
+  },
+  // Serve the site on the custom domain once khadijasardar.com is a zone in this Cloudflare account:
+  // "routes": [
+  //   { "pattern": "khadijasardar.com", "custom_domain": true },
+  //   { "pattern": "www.khadijasardar.com", "custom_domain": true }
+  // ],
+  "observability": { "enabled": true }
+}

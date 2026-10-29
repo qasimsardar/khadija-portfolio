@@ -1,0 +1,18 @@
+# Response headers for Cloudflare Workers static assets (copied into dist/ by the build).
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+
+# Fingerprinted build output (JS, CSS, fonts, optimised images) never changes under the same name.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The product video and its poster keep their names across deploys, so cache them for a week.
+/video/*
+  Cache-Control: public, max-age=604800
+
+/favicon.svg
+  Cache-Control: public, max-age=86400

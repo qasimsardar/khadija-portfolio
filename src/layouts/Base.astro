@@ -31,6 +31,8 @@ interface Props {
   page: string;
   /** The page opens on a dark band, so the nav starts light. */
   navOnDark?: boolean;
+  /** Keep the page out of search results (404). */
+  noindex?: boolean;
 }
 
 const {
@@ -42,10 +44,13 @@ const {
   ogImage = 'prisma/hero.jpg',
   page,
   navOnDark = false,
+  noindex = false,
 } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Industrial & UI/UX Designer`;
 const themeColor = theme === 'dark' ? '#2c2c2c' : '#fefbf4';
-const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+// Pages build to /prisma.html but are served at /prisma, so drop the extension (and a trailing /index).
+const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+const canonical = new URL(cleanPath, Astro.site ?? site.url).href;
 const og = await getImage({ src: asset(ogImage) as ImageMetadata, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 82 });
 const ogUrl = new URL(og.src, Astro.site ?? site.url).href;
 ---
@@ -58,7 +63,7 @@ const ogUrl = new URL(og.src, Astro.site ?? site.url).href;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content={themeColor} />
-    <link rel="canonical" href={canonical} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />

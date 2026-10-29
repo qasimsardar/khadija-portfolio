@@ -3,7 +3,8 @@ import { Image } from 'astro:assets';
 import { asset } from '../lib/images';
 import { site } from '../data/site';
 
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+// Built pages carry ".html" in their path (served without it); "/index.html" is the home page.
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/(index)?$/, '') || '/';
 const links = [
   { href: '/', label: 'Home' },
   { href: '/#about', label: 'About' },

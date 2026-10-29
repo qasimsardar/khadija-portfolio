@@ -11,16 +11,15 @@
       "port": 4321
     },
     {
-      "name": "preview",
-      "runtimeExecutable": "npm",
+      "name": "workers",
+      "runtimeExecutable": "npx",
       "runtimeArgs": [
-        "run",
-        "preview",
-        "--",
+        "wrangler",
+        "dev",
         "--port",
-        "4400"
+        "8787"
       ],
-      "port": 4400
+      "port": 8787
     }
   ]
 }
