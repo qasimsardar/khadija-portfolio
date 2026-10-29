@@ -1,11 +1,16 @@
 ---
 import '@fontsource/pacifico/400.css';
-import '@fontsource/roboto/400.css';
 import Base from '../layouts/Base.astro';
 import Img from '../components/Img.astro';
 import SectionTitle from '../components/SectionTitle.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import CaseHero from '../components/case/CaseHero.astro';
+import MetaStrip from '../components/case/MetaStrip.astro';
+import NextProject from '../components/case/NextProject.astro';
+import { projects } from '../data/projects';
 import { site } from '../data/site';
 
+const project = projects.find((p) => p.slug === 'pennie')!;
 const marker = 'var(--lime)';
 const palette = [
   { hex: '#2C2C2C', outline: true },
@@ -13,12 +18,32 @@ const palette = [
   { hex: '#D5EE74' },
   { hex: '#B94FE0' },
 ];
+// Copy transcribed verbatim from the competitor cards in the Figma file.
+const competitors = [
+  {
+    name: 'GoodBudget',
+    logo: 'pennie/logo-goodbudget.png',
+    text: 'Uses the envelope budgeting system and offers helpful guides, courses, and savings features. However, its interface can be overwhelming for new users, with a cluttered homepage and confusing navigation.',
+  },
+  {
+    name: 'YNAB',
+    logo: 'pennie/logo-ynab.png',
+    featured: true,
+    text: 'Offers a standout experience with consistent visuals, user-friendly flows, and helpful guides, blogs, and workshops. Its layout is clean and highly accessible, though some sections feel slightly over-detailed.',
+  },
+  {
+    name: 'Nerd Wallet',
+    logo: 'pennie/logo-nerdwallet.png',
+    text: 'Focuses on financial literacy with a strong visual interface and a wide range of tools (credit cards, loans, investments). While engaging and well-organized, its dense information can be too complex for beginners.',
+  },
+];
 const hifi = [
   { title: 'Splash and Onboarding Screen', src: 'pennie/hifi-splash.jpg', alt: 'Splash, sign-in and sign-up screens' },
   {
     title: 'Home Screen and Menu',
     src: 'pennie/hifi-home.jpg',
     alt: 'Annotated home screen showing menu, wallet balance, income and expense chart, daily tip and navigation bar, next to the open menu',
+    wallet: true,
   },
   { title: 'Income Page', src: 'pennie/hifi-income.jpg', alt: 'Add income form, date picker and frequency selector' },
   { title: 'Expenses Page', src: 'pennie/hifi-expenses.jpg', alt: 'Add expense form with category chips, and its date picker' },
@@ -26,38 +51,52 @@ const hifi = [
   { title: 'Budget Set-up Page', src: 'pennie/hifi-budget.jpg', alt: 'Monthly budget donut chart with set-up form, and the budget period selector' },
   { title: 'Blogs', src: 'pennie/hifi-blogs.jpg', alt: 'Blog list screen and four article screens about saving and budgeting' },
 ];
+// Bar geometry measured from the Home screen mockup (pixels in the 2560×1158 export), Expenses then Income per year.
+const IMG = { w: 2560, h: 1158 };
+const bars = [
+  [728, 746, 591, 'e'], [750, 768, 605, 'i'], [775, 793, 577, 'e'], [796, 815, 572, 'i'],
+  [822, 840, 563, 'e'], [843, 862, 557, 'i'], [868, 887, 554, 'e'], [890, 908, 562, 'i'],
+  [916, 933, 520, 'e'], [937, 955, 520, 'i'], [962, 980, 484, 'e'], [984, 1002, 473, 'i'],
+] as const;
+const base = 675;
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
 ---
 
 <Base
+  page="pennie"
   title="Pennie"
   theme="dark"
+  accent={project.accent}
+  progress
+  ogImage="pennie/hero.jpg"
   description="Pennie is a smart, user-friendly budgeting app for people juggling careers, family and unpredictable incomes."
 >
-  <div class="hero bleed">
-    <Img src="pennie/hero.jpg" alt="Two phones showing the Pennie app home screen with wallet balance and spending chart" sizes="100vw" eager />
-  </div>
+  <CaseHero project={project} />
+  <MetaStrip project={project} />
 
   <div class="case">
     <section class="container problem" aria-label="Problem and solution">
       <div class="problem-text">
-        <SectionTitle marker={marker} variant="bold">Problem</SectionTitle>
-        <p class="copy">
+        <SectionTitle marker={marker}>Problem</SectionTitle>
+        <p class="copy" data-reveal>
           People with unpredictable incomes feel overwhelmed managing money. Balancing essentials, savings, and goals is
           challenging, and most budgeting apps are too complex or rigid. This leads to frustration, guilt, and inconsistent
           habits.
         </p>
-        <SectionTitle marker={marker} variant="bold">Solution</SectionTitle>
-        <p class="copy">
+        <SectionTitle marker={marker}>Solution</SectionTitle>
+        <p class="copy" data-reveal>
           Pennie simplifies budgeting by helping users track income, log expenses, set goals, and review past spending. With
           flexible tools and motivational content, it makes money management clear, supportive, and easy to stick with.
         </p>
       </div>
-      <Img src="pennie/hand.jpg" alt="Hand holding a phone with the Pennie budget set-up screen" class="hand" sizes="(min-width: 800px) 48vw, 100vw" />
+      <div class="hand" data-parallax="0.08">
+        <Img src="pennie/hand.jpg" alt="Hand holding a phone with the Pennie budget set-up screen" sizes="(min-width: 800px) 48vw, 100vw" />
+      </div>
     </section>
 
     <section class="container" aria-labelledby="competitive">
-      <SectionTitle marker={marker} variant="bold" id="competitive">Competitive Analysis</SectionTitle>
-      <p class="copy narrow indent">
+      <SectionTitle marker={marker} id="competitive">Competitive Analysis</SectionTitle>
+      <p class="copy narrow" data-reveal>
         I conducted a competitive audit of four financial apps: Goodbudget, Empower, NerdWallet, and YNAB to understand
         their strengths, limitations, and user experience strategies. This helped identify opportunities for Pennie to stand
         out by offering a simpler, more motivating approach to budgeting and saving.
@@ -65,7 +104,7 @@ const hifi = [
           site.pennieAuditUrl && (
             <>
               {' '}
-              <a class="lime" href={site.pennieAuditUrl} target="_blank" rel="noopener">
+              <a class="lime link-draw" href={site.pennieAuditUrl} target="_blank" rel="noopener">
                 View full competitive audit here
               </a>
               .
@@ -73,44 +112,54 @@ const hifi = [
           )
         }
       </p>
-      <Img
-        src="pennie/competitors.jpg"
-        alt="Competitor cards for GoodBudget, YNAB and Nerd Wallet summarising their strengths and weaknesses"
-        class="competitors"
-        sizes="(min-width: 1280px) 1038px, 100vw"
-      />
+      <ul class="competitors" data-stagger="0.12">
+        {
+          competitors.map((c) => (
+            <li class:list={['comp', { featured: c.featured }]} data-tilt>
+              <div class="comp-logo">
+                <Img src={c.logo} alt="" sizes="160px" />
+              </div>
+              <h3 class="comp-name">{c.name}</h3>
+              <p>{c.text}</p>
+            </li>
+          ))
+        }
+      </ul>
     </section>
 
     <section class="container" aria-labelledby="flow">
-      <SectionTitle marker={marker} variant="bold" id="flow">User Flow</SectionTitle>
-      <Img
-        src="pennie/user-flow.jpg"
-        alt="User flow: open the app, sign in or sign up, reach the home screen, then branch to income, expenses, goals, budget set-up and blogs"
-        class="user-flow"
-        sizes="(min-width: 800px) 590px, 100vw"
-      />
+      <SectionTitle marker={marker} id="flow">User Flow</SectionTitle>
+      <div class="user-flow" data-reveal>
+        <Img
+          src="pennie/user-flow.jpg"
+          alt="User flow: open the app, sign in or sign up, reach the home screen, then branch to income, expenses, goals, budget set-up and blogs"
+          sizes="(min-width: 800px) 590px, 100vw"
+        />
+      </div>
     </section>
 
     <section class="container" aria-labelledby="logo">
-      <SectionTitle marker={marker} variant="bold" id="logo">Logo</SectionTitle>
-      <div class="logos">
+      <SectionTitle marker={marker} id="logo">Logo</SectionTitle>
+      <div class="logos" data-stagger="0.15">
         <span class="wordmark lime-text">Pennie</span>
         <span class="wordmark" aria-hidden="true">Pennie</span>
       </div>
     </section>
 
     <section class="container" aria-labelledby="palette">
-      <SectionTitle marker={marker} variant="bold" id="palette">Color Palette</SectionTitle>
-      <p class="copy narrow">
+      <SectionTitle marker={marker} id="palette">Color Palette</SectionTitle>
+      <p class="copy narrow" data-reveal>
         I chose a clean, modern palette to enhance clarity and user engagement. #2C2C2C ensures strong text contrast, #FFFFFF
         keeps the content readable, #D5EE74 highlights growth and savings, while #B94FE0 adds energy and motivates the user.
       </p>
-      <ul class="palette">
+      <ul class="palette" data-palette>
         {
           palette.map((c) => (
             <li>
-              <span class:list={['chip', { outline: c.outline }]} style={`background: ${c.hex}`} />
-              <span>{c.hex}</span>
+              <span class:list={['chip', { outline: c.outline }]}>
+                <span class="fill" style={`background: ${c.hex}`} data-fill />
+              </span>
+              <span class="label">{c.hex}</span>
             </li>
           ))
         }
@@ -118,27 +167,27 @@ const hifi = [
     </section>
 
     <section class="container" aria-labelledby="typography">
-      <SectionTitle marker={marker} variant="bold" id="typography">Typography</SectionTitle>
-      <p class="copy narrow">
+      <SectionTitle marker={marker} id="typography">Typography</SectionTitle>
+      <p class="copy narrow" data-reveal>
         I chose Montserrat for its clean, modern style that improves readability and gives the app a simple, approachable
         feel—ideal for a stress-free budgeting experience.
       </p>
-      <div class="specimen">
+      <div class="specimen" data-specimen>
         <div>
           <p class="family">Montserrat</p>
-          <p class="glyphs">
+          <p class="glyphs" data-glyphs>
             Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz
             <br />
             1234567890 .,;’!@#$%^&amp;*
           </p>
         </div>
-        <p class="aa1" aria-hidden="true">Aa1</p>
+        <p class="aa1" aria-hidden="true" data-aa1>Aa1</p>
       </div>
     </section>
 
     <section class="container" aria-labelledby="ui-kit">
-      <SectionTitle marker={marker} variant="bold" id="ui-kit">UI Kit</SectionTitle>
-      <div class="scroll-x" tabindex="0" role="region" aria-label="UI kit (scrolls sideways on small screens)">
+      <SectionTitle marker={marker} id="ui-kit">UI Kit</SectionTitle>
+      <div class="scroll-x" tabindex="0" role="region" aria-label="UI kit (scrolls sideways on small screens)" data-reveal>
         <Img
           src="pennie/ui-kit.jpg"
           alt="UI kit: add button, dropdowns, password fields, calendar buttons, percentage bar, icons, arrows, selection buttons and navigation stepper states"
@@ -148,25 +197,38 @@ const hifi = [
     </section>
 
     <section class="container" aria-labelledby="lofi">
-      <SectionTitle marker={marker} variant="bold" id="lofi">Low Fidelity Prototype</SectionTitle>
-      <div class="pair">
-        <Img src="pennie/lofi-1.jpg" alt="Low fidelity wireframes: splash, sign in, sign up, menu, add expense, date picker, goals and add goal" sizes="(min-width: 800px) 50vw, 100vw" />
-        <Img src="pennie/lofi-2.jpg" alt="Low fidelity wireframes: home, add income, date and frequency pickers, goal type, blogs and article" sizes="(min-width: 800px) 50vw, 100vw" />
+      <SectionTitle marker={marker} id="lofi">Low Fidelity Prototype</SectionTitle>
+      <div class="pair" data-stagger="0.12">
+        <div>
+          <Img src="pennie/lofi-1.png" alt="Low fidelity wireframes: splash, sign in, sign up, menu, home, add income, date picker and frequency selector" sizes="(min-width: 800px) 50vw, 100vw" />
+        </div>
+        <div>
+          <Img src="pennie/lofi-2.png" alt="Low fidelity wireframes: add expense, date picker, goals, add goal, goal type, blogs and an article" sizes="(min-width: 800px) 50vw, 100vw" />
+        </div>
       </div>
+      <figure class="compare" data-reveal>
+        <BeforeAfter
+          label="Compare the low fidelity and high fidelity Home screen"
+          before={{ src: 'pennie/compare-lofi.jpg', alt: 'Low fidelity wireframe of the Home screen', label: 'Low-fi' }}
+          after={{ src: 'pennie/compare-hifi.jpg', alt: 'High fidelity Home screen with wallet balance, chart and daily tip', label: 'High-fi' }}
+        />
+        <figcaption class="label">Home screen · drag to compare</figcaption>
+      </figure>
     </section>
 
     <section class="container" aria-labelledby="usability-1">
-      <SectionTitle marker={marker} variant="bold" id="usability-1">Usability Study</SectionTitle>
-      <p class="copy narrow">
-        I tested the interactive low-fidelity prototype with 3 participants to evaluate ease of use and navigation.
+      <SectionTitle marker={marker} id="usability-1">Usability Study</SectionTitle>
+      <p class="copy narrow" data-reveal>
+        I tested the interactive low-fidelity prototype with <span class="num" data-count="3" data-duration="1">3</span> participants
+        to evaluate ease of use and navigation.
       </p>
       <h3 class="subhead">Insights</h3>
-      <ul class="bullets copy narrow">
+      <ul class="bullets copy narrow" data-stagger="0.12">
         <li>Users found it hard to move between pages since the only option was the top menu or the search option.</li>
         <li>Navigation felt slow and unintuitive.</li>
       </ul>
       <h3 class="subhead">Improvements</h3>
-      <p class="copy narrow">
+      <p class="copy narrow" data-reveal>
         I added a bottom navigation bar with icons, making it easier to switch between pages quickly without relying on the
         menu.
       </p>
@@ -174,49 +236,77 @@ const hifi = [
 
     <section aria-labelledby="hifi">
       <div class="container">
-        <SectionTitle marker={marker} variant="bold" id="hifi">High Fidelity Prototype</SectionTitle>
+        <SectionTitle marker={marker} id="hifi">High Fidelity Prototype</SectionTitle>
       </div>
       {
         hifi.map((h) => (
           <figure class="hifi">
             <figcaption class="container subhead">{h.title}</figcaption>
-            <div class="bleed">
+            <div class="bleed hifi-media" data-reveal data-wallet={h.wallet ? '' : undefined}>
               <Img src={h.src} alt={h.alt} sizes="100vw" />
+              {h.wallet && (
+                <div class="wallet" aria-hidden="true">
+                  <span class="patch" style={`left:${pct(655, IMG.w)};top:${pct(300, IMG.h)};width:${pct(215, IMG.w)};height:${pct(56, IMG.h)}`} />
+                  <span class="balance" style={`left:${pct(661, IMG.w)};top:${pct(298, IMG.h)}`} data-count="9999.99" data-decimals="2" data-prefix="$" data-duration="1.8">
+                    $9999.99
+                  </span>
+                  <span class="patch" style={`left:${pct(724, IMG.w)};top:${pct(462, IMG.h)};width:${pct(282, IMG.w)};height:${pct(base - 462, IMG.h)}`} />
+                  {bars.map(([x0, x1, top, kind]) => (
+                    <span
+                      class:list={['bar', kind === 'e' ? 'exp' : 'inc']}
+                      data-bar
+                      style={`left:${pct(x0, IMG.w)};width:${pct(x1 - x0 + 1, IMG.w)};top:${pct(top, IMG.h)};height:${pct(base - top, IMG.h)}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </figure>
         ))
       }
-      <div class="bleed showcase">
+      <div class="bleed showcase" data-reveal>
         <Img src="pennie/hifi-showcase.jpg" alt="Close-up of the Pennie home, add expense and goals screens" sizes="100vw" />
       </div>
     </section>
 
     <section aria-labelledby="usability-2">
       <div class="container">
-        <SectionTitle marker={marker} variant="bold" id="usability-2">Usability Study</SectionTitle>
-        <p class="copy narrow">
+        <SectionTitle marker={marker} id="usability-2">Usability Study</SectionTitle>
+        <p class="copy narrow" data-reveal>
           I tested my final prototype with participants to evaluate how user-friendly and accessible the app was for my
           target audience.
         </p>
       </div>
-      <div class="bleed spaced">
+      <div class="bleed spaced" data-reveal="clip">
         <Img src="pennie/usability.jpg" alt="Pennie goals and budget screens on two phones standing on stone pedestals" sizes="100vw" />
       </div>
     </section>
 
     <section class="container" aria-labelledby="insights">
-      <SectionTitle marker={marker} variant="bold" id="insights">Insights</SectionTitle>
-      <ul class="bullets copy narrow">
-        <li>Users found the interface clean and easy to understand.</li>
-        <li>Most were able to complete tasks like adding expenses, setting budgets, and viewing progress without help.</li>
-        <li>The new bottom navigation bar improved usability and made switching between pages effortless.</li>
-        <li>Overall, participants felt the app was helpful and motivating for managing their finances.</li>
+      <SectionTitle marker={marker} id="insights">Insights</SectionTitle>
+      <ul class="checks copy narrow" data-checks>
+        {
+          [
+            'Users found the interface clean and easy to understand.',
+            'Most were able to complete tasks like adding expenses, setting budgets, and viewing progress without help.',
+            'The new bottom navigation bar improved usability and made switching between pages effortless.',
+            'Overall, participants felt the app was helpful and motivating for managing their finances.',
+          ].map((t) => (
+            <li>
+              <svg class="check" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+                <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35" />
+                <path d="M7 12.4l3.2 3.1L17 8.8" fill="none" stroke="currentColor" stroke-width="1.8" data-check />
+              </svg>
+              <span>{t}</span>
+            </li>
+          ))
+        }
       </ul>
     </section>
 
     <section class="container" aria-labelledby="reflection">
-      <SectionTitle marker={marker} variant="bold" id="reflection">Final Reflection</SectionTitle>
-      <div class="copy narrow">
+      <SectionTitle marker={marker} id="reflection">Final Reflection</SectionTitle>
+      <div class="copy narrow reflection" data-reveal>
         <p>
           Designing Pennie was a fulfilling journey—from research to final design. I gained hands-on experience with new
           tools and learned the importance of creating solutions that are both practical and emotionally supportive.
@@ -228,19 +318,17 @@ const hifi = [
       </div>
     </section>
   </div>
+
+  <NextProject current="pennie" />
 </Base>
 
 <style>
   .case {
-    margin-top: clamp(40px, 6vw, 80px);
+    margin-top: var(--section-gap);
   }
 
   .narrow {
-    max-width: 1000px;
-  }
-
-  .indent {
-    padding-left: clamp(0px, 4.4vw, 56px);
+    max-width: 62ch;
   }
 
   .lime {
@@ -256,24 +344,73 @@ const hifi = [
   }
 
   .problem-text .copy {
-    max-width: 610px;
-    padding-left: clamp(0px, 4.6vw, 59px);
-    margin-bottom: clamp(48px, 6vw, 70px);
+    max-width: 52ch;
+    margin-bottom: clamp(56px, 7vw, 96px);
   }
 
   .problem-text .copy:last-child {
     margin-bottom: 0;
   }
 
-  .problem :global(.hand) {
+  .hand {
     margin-right: calc(-1 * var(--gutter));
   }
 
-  .case :global(.competitors) {
-    margin: clamp(32px, 5vw, 60px) auto 0;
+  /* Competitor cards: rebuilt from the Figma image so each can tilt on its own. */
+  .competitors {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+    margin-top: clamp(64px, 9vw, 140px);
+    list-style: none;
+    perspective: 1200px;
   }
 
-  .case :global(.user-flow) {
+  .comp {
+    position: relative;
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    gap: 18px;
+    padding: clamp(96px, 9vw, 130px) clamp(20px, 2.4vw, 34px) clamp(28px, 3vw, 44px);
+    border-radius: 22px;
+    background: #333;
+    color: rgba(255, 255, 255, 0.86);
+    text-align: center;
+    font-size: var(--fs-small);
+    line-height: 1.6;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  .comp.featured {
+    background: #3b3c30;
+    margin-top: clamp(40px, 6vw, 72px);
+  }
+
+  .comp-logo {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: clamp(96px, 10vw, 150px);
+    transform: translate(-50%, -48%) translateZ(40px);
+  }
+
+  .comp-logo :global(img) {
+    width: 100%;
+  }
+
+  .comp-name {
+    color: var(--white);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-h3);
+    letter-spacing: -0.01em;
+  }
+
+  .user-flow {
+    max-width: 590px;
     margin-inline: auto;
   }
 
@@ -298,27 +435,38 @@ const hifi = [
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: clamp(16px, 3vw, 40px);
     margin-top: clamp(40px, 6vw, 84px);
-    padding-left: 12px;
     list-style: none;
     text-align: center;
-    font-family: 'Roboto', var(--font-sans);
-    font-weight: 400;
-    font-size: clamp(1rem, 0.8rem + 1vw, 1.5rem);
   }
 
   .palette li {
     display: grid;
-    gap: 30px;
+    gap: 22px;
   }
 
   .chip {
+    position: relative;
     display: block;
     aspect-ratio: 1;
+    overflow: hidden;
     border-radius: 20px;
+    background: rgba(255, 255, 255, 0.04);
   }
 
   .chip.outline {
-    border: 1px solid var(--white);
+    box-shadow: inset 0 0 0 1px var(--white);
+  }
+
+  /* Liquid fill: a wavy-topped block that rises into the chip. */
+  .fill {
+    position: absolute;
+    inset: -14% -10% 0;
+    border-radius: 46% 54% 0 0 / 9% 11% 0 0;
+  }
+
+  .chip.outline .fill {
+    inset: 1px;
+    border-radius: 19px;
   }
 
   .specimen {
@@ -330,9 +478,10 @@ const hifi = [
   }
 
   .family {
-    font-weight: 700;
+    font-weight: 600;
     font-size: clamp(3rem, 1.5rem + 6vw, 6rem);
     line-height: 1.1;
+    letter-spacing: -0.03em;
   }
 
   .glyphs {
@@ -345,9 +494,10 @@ const hifi = [
 
   .aa1 {
     padding-right: clamp(0px, 8vw, 110px);
-    font-weight: 700;
+    font-weight: 600;
     font-size: clamp(6rem, 2rem + 17.5vw, 15.625rem);
     line-height: 1;
+    letter-spacing: -0.04em;
   }
 
   .pair {
@@ -357,37 +507,73 @@ const hifi = [
     margin-inline: -15px;
   }
 
+  .compare {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    margin-top: clamp(56px, 7vw, 100px);
+  }
+
+  .compare figcaption {
+    color: var(--ink-3);
+  }
+
   .subhead {
-    margin: clamp(28px, 4vw, 44px) 0 16px;
-    font-weight: 700;
-    font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2rem);
-    line-height: 1.25;
+    margin: clamp(32px, 4vw, 48px) 0 16px;
+    font-weight: 300;
+    font-size: var(--fs-h3);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--page-fg);
+  }
+
+  .num {
+    color: var(--lime);
+    font-weight: 600;
   }
 
   .bullets {
     display: grid;
-    gap: 4px;
+    gap: 6px;
     list-style: none;
   }
 
   .bullets li {
     position: relative;
-    padding-left: 22px;
+    padding-left: 26px;
   }
 
   .bullets li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.5em;
-    width: 15px;
-    height: 15px;
+    top: 0.55em;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--lime);
   }
 
+  .checks {
+    display: grid;
+    gap: 16px;
+    list-style: none;
+  }
+
+  .checks li {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .check {
+    margin-top: 0.15em;
+    color: var(--lime);
+  }
+
   .hifi {
-    margin-top: clamp(32px, 4vw, 56px);
+    margin-top: clamp(40px, 5vw, 72px);
   }
 
   .hifi .subhead {
@@ -395,13 +581,57 @@ const hifi = [
     margin-bottom: clamp(8px, 1.5vw, 20px);
   }
 
-  .showcase,
-  .spaced {
-    margin-top: clamp(32px, 5vw, 60px);
+  /* Wallet overlay: live balance and chart bars drawn over the mockup at its exact positions. */
+  .hifi-media {
+    position: relative;
+    container-type: inline-size;
   }
 
-  .copy p + p {
-    margin-top: 0;
+  .wallet {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Covers the baked-in balance and bars; a slight feather hides the seam with the JPEG screen. */
+  .patch {
+    position: absolute;
+    background: #2a2a2a;
+    box-shadow: 0 0 3px 2px #2a2a2a;
+  }
+
+  .balance {
+    position: absolute;
+    color: #dbf57a;
+    font-weight: 500;
+    font-size: 2.32cqi;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  .bar {
+    position: absolute;
+    transform-origin: bottom center;
+  }
+
+  .bar.exp {
+    background: linear-gradient(#b94fe0, #a944d0);
+  }
+
+  .bar.inc {
+    background: #dbf57a;
+  }
+
+  .showcase,
+  .spaced {
+    margin-top: clamp(40px, 5vw, 72px);
+  }
+
+  .reflection {
+    display: grid;
+    gap: 1em;
   }
 
   @media (max-width: 800px) {
@@ -409,20 +639,24 @@ const hifi = [
       grid-template-columns: 1fr;
     }
 
-    .problem-text .copy,
-    .indent {
-      padding-left: 0;
-    }
-
-    .problem :global(.hand) {
+    .hand {
       margin-right: 0;
       justify-self: end;
       width: 85%;
     }
 
+    .competitors {
+      grid-template-columns: 1fr;
+      gap: 96px;
+      margin-top: 110px;
+    }
+
+    .comp.featured {
+      margin-top: 0;
+    }
+
     .palette {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      padding-left: 0;
     }
 
     .palette li {
