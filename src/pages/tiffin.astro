@@ -324,9 +324,8 @@ const fullBleed = [
     background: #fde9e0;
   }
 
-  .icon :global(img) {
-    width: 48px;
-  }
+  .icon :global(picture) { display:grid; place-items:center; width:48px; height:48px; flex:none; }
+  .icon :global(img) { display:block; width:48px; height:48px; object-fit:contain; }
 
   /* Moodboard: large rounded frame, the composite zooms out and drifts as it scrolls through. */
   .moodboard {
@@ -478,8 +477,7 @@ const fullBleed = [
       height: 64px;
     }
 
-    .icon :global(img) {
-      width: 36px;
-    }
+    .icon :global(picture) { width:36px; height:36px; }
+    .icon :global(img) { width:36px; height:36px; }
   }
 </style>

@@ -31,7 +31,7 @@ const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'C
             data-tone={p.tone.bg}
             data-ink={p.tone.ink}
             data-muted={p.tone.muted}
-            style={`--tone: ${p.tone.bg}; --tone-ink: ${p.tone.ink}; --tone-muted: ${p.tone.muted}; --card-accent: ${p.accent}`}
+            style={`--tone: ${p.tone.bg}; --tone-ink: ${p.tone.ink}; --tone-muted: ${p.tone.muted}; --card-accent: ${p.accent}; --glow: ${p.glow}`}
             aria-labelledby={`card-${p.slug}`}
           >
             <div class="container-wide card-inner">
@@ -47,7 +47,7 @@ const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'C
                 <span class="pill">{p.category}</span>
               </header>
               <div class="frame-wrap">
-                {p.slug === 'prisma' && <span class="glow" aria-hidden="true" />}
+                <span class="glow" aria-hidden="true" />
                 <a class="frame" href={p.href} data-morph data-cursor="View" tabindex="-1" aria-hidden="true" data-reveal="clip">
                   <div class="frame-media" transition:name={`hero-${p.slug}`}>
                     <Img src={p.cover.src} alt={p.cover.alt} sizes="(min-width: 1440px) 1340px, 92vw" data-parallax-img="" />
@@ -59,7 +59,7 @@ const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'C
                   <strong class:list={['mark', `mark-${p.slug}`]}>{p.mark}</strong> {p.description}
                 </p>
                 <Button href={p.href} variant="secondary" cursor="Open" accent={p.accent}>
-                  View case study
+                  Explore project
                 </Button>
               </div>
             </div>
@@ -271,7 +271,7 @@ const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'C
     inset: 8% 14%;
     z-index: -1;
     border-radius: 50%;
-    background: conic-gradient(from 0deg, #dd1886, #7d4c9e, #3e82c4, #2ee6c9, #d5ee74, #dd1886);
+    background: conic-gradient(from 0deg, var(--glow));
     filter: blur(70px);
     opacity: 0.5;
     animation: spin 14s linear infinite;
@@ -282,6 +282,8 @@ const disciplines = ['Industrial Design', 'UI/UX', 'Research', 'Prototyping', 'C
       transform: rotate(1turn);
     }
   }
+
+  :global(.reduced-motion) .glow { animation: none; }
 
   .card-foot {
     display: grid;

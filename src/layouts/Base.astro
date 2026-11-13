@@ -33,6 +33,8 @@ interface Props {
   navOnDark?: boolean;
   /** Keep the page out of search results (404). */
   noindex?: boolean;
+  /** Hide the shared contact footer when a page provides its own signature. */
+  hideFooter?: boolean;
 }
 
 const {
@@ -45,6 +47,7 @@ const {
   page,
   navOnDark = false,
   noindex = false,
+  hideFooter = false,
 } = Astro.props;
 const fullTitle = title ? `${title} | ${site.name}` : `${site.name} | Industrial & UI/UX Designer`;
 const themeColor = theme === 'dark' ? '#2c2c2c' : '#fefbf4';
@@ -111,7 +114,7 @@ const ogUrl = new URL(og.src, Astro.site ?? site.url).href;
     <main id="main" transition:animate="none">
       <slot />
     </main>
-    <Footer />
+    {!hideFooter && <Footer />}
     <script>
       import '../scripts/motion';
     </script>

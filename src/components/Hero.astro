@@ -16,10 +16,6 @@ const { workHref } = Astro.props;
       Designing meaningful <span class="accent">products</span> and <span class="accent">digital experiences</span>.
     </h1>
     <div class="row">
-      <p class="lead intro" data-reveal>
-        I am Khadija Sardar, an industrial designer exploring the intersection of function, aesthetics and human centered
-        design
-      </p>
       <div class="actions" data-reveal>
         <Button href={workHref}>Explore my work</Button>
         <Button href="/#about" variant="link" magnetic={false}>More about me</Button>
@@ -56,18 +52,12 @@ const { workHref } = Astro.props;
   }
 
   .row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     gap: 32px clamp(32px, 6vw, 120px);
     padding-top: clamp(8px, 1.5vw, 24px);
     border-top: 1px solid var(--line);
-  }
-
-  .intro {
-    max-width: 34ch;
-    padding-top: clamp(20px, 2vw, 32px);
-    color: var(--ink-2);
   }
 
   .actions {
@@ -119,10 +109,6 @@ const { workHref } = Astro.props;
   }
 
   @media (max-width: 900px) {
-    .row {
-      grid-template-columns: 1fr;
-    }
-
     .scroll-cue {
       display: none;
     }

@@ -44,6 +44,7 @@ const protoAlts = [
   'Wiring the electronics into the speaker shell',
   'Electronics, battery and drivers assembled inside the housing',
 ];
+const protoSlides = [...protoAlts, ...protoAlts];
 const gallerySmall = {
   left: [
     { src: 'prisma/final-l1.jpg', alt: 'Final Prisma prototype in black with a white frame, front three-quarter view' },
@@ -189,18 +190,19 @@ const gallerySmall = {
       </div>
     </section>
 
-    <section class="proto" aria-labelledby="proto" data-hscroll>
-      <div class="container">
-        <SectionTitle marker={marker} led id="proto">Proto</SectionTitle>
+    <section class="proto" aria-labelledby="proto">
+      <div class="proto-head container">
+        <SectionTitle marker={marker} led id="proto">Making of Functional Prototype</SectionTitle>
+        <button class="proto-toggle label" type="button" data-proto-toggle aria-pressed="false">Pause motion</button>
       </div>
-      <div class="proto-viewport">
-        <ul class="proto-track" data-hscroll-track>
+      <div class="proto-viewport" data-proto-viewport>
+        <ul class="proto-track" data-proto-track>
           {
-            protoAlts.map((alt, i) => (
-              <li>
+            protoSlides.map((alt, i) => (
+              <li aria-hidden={i >= protoAlts.length ? 'true' : undefined}>
                 <Img
-                  src={`prisma/proto-${String(i + 1).padStart(2, '0')}.png`}
-                  alt={alt}
+                  src={`prisma/proto-${String((i % protoAlts.length) + 1).padStart(2, '0')}.png`}
+                  alt={i < protoAlts.length ? alt : ''}
                   sizes="(min-width: 900px) 32vw, (min-width: 600px) 45vw, 92vw"
                 />
               </li>
@@ -564,10 +566,13 @@ const gallerySmall = {
     transform: translate(-50%, 0);
   }
 
-  /* Proto: horizontal track (pinned and scrubbed on desktop, swipeable on touch). */
+  /* Prototype-making photos move continuously; visitors can pause the reel. */
+  .proto-head { display:flex; align-items:baseline; justify-content:space-between; gap:24px; }
+  .proto-head :global(.section-title) { min-width:0; }
+  .proto-toggle { flex:none; padding:10px 0; border:0; border-bottom:1px solid var(--line); background:none; color:var(--page-fg); cursor:pointer; }
+  .proto-toggle:hover { color:var(--accent); }
   .proto-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    overflow: hidden;
     scrollbar-width: none;
     padding-inline: var(--gutter);
   }
@@ -578,36 +583,24 @@ const gallerySmall = {
 
   .proto-track {
     display: flex;
-    gap: 16px;
+    gap: clamp(12px, 1.5vw, 22px);
     width: max-content;
     list-style: none;
+    will-change: transform;
   }
 
   .proto-track li {
     flex: none;
     width: clamp(260px, 32vw, 520px);
-    scroll-snap-align: start;
   }
+
+  :global(.reduced-motion) .proto-toggle { display:none; }
+  :global(.reduced-motion) .proto-viewport { overflow-x:auto; scroll-snap-type:x mandatory; }
+  :global(.reduced-motion) .proto-track li { scroll-snap-align:start; }
 
   .proto-track :global(img) {
     width: 100%;
     border-radius: 20px;
-  }
-
-  /* Pinned: fill the viewport and centre the track vertically. */
-  .proto:global(.hscroll-on) {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 100vh;
-  }
-
-  .proto:global(.hscroll-on) .proto-viewport {
-    overflow: visible;
-  }
-
-  .proto:global(.hscroll-on) .proto-track li {
-    width: clamp(320px, 40vw, 640px);
   }
 
   /* Final prototype gallery: small stacks either side of the hero shot */
@@ -621,8 +614,12 @@ const gallerySmall = {
 
   .side {
     display: grid;
+    align-content: space-between;
     gap: clamp(8px, 1.1vw, 14px);
   }
+
+  .gallery > .side:first-child { padding-top: clamp(18px, 3vw, 44px); }
+  .gallery > .side:last-child { padding-top: clamp(42px, 6vw, 88px); }
 
   .gallery :global(img) {
     width: 100%;
@@ -695,6 +692,9 @@ const gallerySmall = {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       padding-inline: 0;
     }
+
+    .gallery > .side:first-child,
+    .gallery > .side:last-child { padding-top: 0; }
 
     .gallery .main {
       grid-column: 1 / -1;

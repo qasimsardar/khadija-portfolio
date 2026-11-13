@@ -8,7 +8,7 @@ import { site } from '../data/site';
 const disciplines = [...new Set(projects.map((p) => p.category))];
 ---
 
-<Base page="work" title="Work" description="Industrial design and UI/UX projects by Khadija Sardar: Prisma, Tiffin, Pennie, SkilLender and Go Safe.">
+<Base page="work" title="Work" description="Industrial design and UI/UX projects by Khadija Sardar: Prisma, Tiffin, Pennie, SkilLender and GoSafe.">
   <section class="intro container-wide" aria-labelledby="work-title">
     <p class="label kicker">{site.role}</p>
     <h1 id="work-title" class="display title" data-split="intro">
@@ -17,6 +17,33 @@ const disciplines = [...new Set(projects.map((p) => p.category))];
     <ul class="disciplines" data-stagger="0.06">
       {disciplines.map((d) => <li class="pill">{d}</li>)}
     </ul>
+  </section>
+
+  <section id="research-work" class="work-showcase container-wide" aria-labelledby="research-work-title">
+    <div class="showcase-heading"><p class="label kicker">Research · current</p><h2 id="research-work-title">Designing for people, from the first question.</h2></div>
+    <article class="research-card" data-reveal>
+      <div class="research-index" aria-hidden="true">R<span>01</span></div>
+      <div class="research-copy">
+        <p class="label research-meta">Iowa State College of Design · 2026—present</p>
+        <h3>Undergraduate Research Assistant</h3>
+        <p class="copy">{site.about.experience[0].detail}</p>
+        <ul class="research-tags"><li class="pill">Human-centered design</li><li class="pill">Pediatric assistive devices</li><li class="pill">Research & prototyping</li></ul>
+      </div>
+    </article>
+  </section>
+
+  <section id="client-work" class="client-showcase container-wide" aria-labelledby="client-work-title">
+    <div class="showcase-heading"><p class="label kicker">Selected client work</p><h2 id="client-work-title">Identity and ideas made for the real world.</h2></div>
+    <div class="client-logos" data-stagger="0.12">
+      <article class="client-logo-card" data-reveal="clip">
+        <div class="client-work-image client-work-image--logo"><span class="client-work-number label">01</span><Img src="work/a1-concrete-logo.png" alt="A1 Concrete logo designed for a concrete services business" sizes="(min-width: 800px) 42vw, 92vw" /></div>
+        <div class="client-work-copy"><p class="label client-work-category">Brand identity · Logo design</p><h3>A1 Concrete</h3></div>
+      </article>
+      <article class="client-logo-card" data-reveal="clip">
+        <div class="client-work-image"><span class="client-work-number label">02</span><Img src="work/maples-clinic-display.jpg" alt="Maple’s Clinic Visit book display and activity materials placed at a clinic reception counter" sizes="(min-width: 800px) 42vw, 92vw" /></div>
+        <div class="client-work-copy"><p class="label client-work-category">Product · Clinic book frame</p><h3>Maple’s Clinic Visit</h3><p class="copy">A book frame for the Maple book series by Bruno Oro, now displayed in <strong>17+ clinics across the U.S.</strong></p></div>
+      </article>
+    </div>
   </section>
 
   <!-- Index: hover a row (desktop) and its cover follows the cursor. -->
@@ -136,6 +163,33 @@ const disciplines = [...new Set(projects.map((p) => p.category))];
   .disciplines .pill {
     border-color: var(--line);
   }
+
+  .work-showcase,.client-showcase { padding-block:clamp(40px,7vw,92px) var(--section-gap); }
+  .showcase-heading { display:grid; grid-template-columns:minmax(180px,.8fr) minmax(0,1.2fr); align-items:end; gap:24px; margin-bottom:clamp(32px,5vw,68px); }
+  .showcase-heading .kicker { margin:0; text-transform:uppercase; letter-spacing:.09em; }
+  .showcase-heading h2 { max-width:17ch; font-size:var(--fs-h2); font-weight:300; line-height:1.04; letter-spacing:-.045em; }
+  .research-card { display:grid; grid-template-columns:minmax(170px,.65fr) minmax(0,1.35fr); align-items:center; gap:clamp(32px,7vw,100px); padding:clamp(26px,5vw,64px); border:1px solid var(--line); border-radius:var(--radius); background:var(--paper-2); }
+  .research-index { display:grid; place-items:center; width:min(100%,230px); aspect-ratio:1; border:1px solid color-mix(in srgb,var(--violet) 40%,transparent); border-radius:50%; color:var(--violet); font-size:clamp(5rem,12vw,9rem); font-weight:300; line-height:.8; letter-spacing:-.12em; }
+  .research-index span { align-self:start; margin-top:20%; margin-left:-10%; font-family:var(--font-mono); font-size:var(--fs-label); letter-spacing:.08em; }
+  .research-meta { margin-bottom:12px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.08em; }
+  .research-copy h3 { font-size:var(--fs-h3); font-weight:400; letter-spacing:-.035em; }
+  .research-copy .copy { max-width:64ch; margin-top:16px; color:var(--ink-2); }
+  .research-tags { display:flex; flex-wrap:wrap; gap:9px; margin-top:24px; list-style:none; }
+  .research-tags .pill { border-color:var(--line); }
+  .client-showcase { padding-top:0; }
+  .client-logos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(16px,3vw,40px); }
+  .client-logo-card { overflow:hidden; border:1px solid var(--line); border-radius:var(--radius); background:var(--paper-2); }
+  .client-work-image { position:relative; display:grid; place-items:center; aspect-ratio:1.35; overflow:hidden; background:#eeeae3; }
+  .client-work-image :global(img) { width:100%; height:100%; object-fit:cover; transition:transform .75s var(--ease-out); }
+  .client-logo-card:hover .client-work-image :global(img) { transform:scale(1.035); }
+  .client-work-image--logo { background:#f4f2ed; }
+  .client-work-image--logo :global(img) { width:34%; height:66%; object-fit:contain; }
+  .client-work-number { position:absolute; z-index:1; top:14px; left:16px; color:var(--ink-3); }
+  .client-work-copy { padding:clamp(18px,2.5vw,30px); }
+  .client-work-category { margin-bottom:10px; color:var(--ink-3); text-transform:uppercase; letter-spacing:.08em; }
+  .client-work-copy h3 { font-size:var(--fs-h3); font-weight:400; letter-spacing:-.035em; }
+  .client-work-copy .copy { max-width:48ch; margin-top:12px; color:var(--ink-2); }
+  .client-work-copy .copy strong { color:var(--ink); font-weight:600; }
 
   /* Index rows */
   .index {
@@ -331,20 +385,6 @@ const disciplines = [...new Set(projects.map((p) => p.category))];
     object-position: right center;
   }
 
-  /* GoSafe: transparent phone cut-out overflows the navy band slightly, as in the design. */
-  .band-gosafe .media {
-    position: relative;
-  }
-
-  .band-gosafe .media :global(img) {
-    position: absolute;
-    top: -5%;
-    left: clamp(16px, 4.3vw, 55px);
-    width: auto;
-    height: 110%;
-    object-fit: contain;
-  }
-
   .band-skillender .media :global(img) {
     object-fit: contain;
   }
@@ -356,6 +396,10 @@ const disciplines = [...new Set(projects.map((p) => p.category))];
   }
 
   @media (max-width: 800px) {
+    .showcase-heading { grid-template-columns:1fr; }
+    .research-card { grid-template-columns:1fr; }
+    .research-index { width:150px; font-size:5rem; }
+    .client-logos { grid-template-columns:1fr; }
     .row-link {
       grid-template-columns: 40px minmax(0, 1fr) 40px;
     }
@@ -383,14 +427,5 @@ const disciplines = [...new Set(projects.map((p) => p.category))];
       padding: 28px var(--gutter) 48px;
     }
 
-    .band-gosafe .media {
-      padding: 32px var(--gutter) 0;
-    }
-
-    .band-gosafe .media :global(img) {
-      position: static;
-      height: auto;
-      max-height: 460px;
-    }
   }
 </style>

@@ -1,0 +1,338 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import SectionTitle from '../components/SectionTitle.astro';
+import NextProject from '../components/case/NextProject.astro';
+import { projects } from '../data/projects';
+
+const project = projects.find((p) => p.slug === 'skillender')!;
+const scope = [
+  'Context research', 'Benchmarking', 'Stakeholder map', 'System design', 'Branding',
+  'UI kit', 'Low & high fidelity prototypes', 'Website', 'Brochure', 'Promotional video',
+];
+const steps = [
+  { n: '01', title: 'Learn for free', text: 'Students join hands-on workshops at no cost.' },
+  { n: '02', title: 'Taught by experts', text: 'Artisans and business owners teach and rent out their tools.' },
+  { n: '03', title: 'Make three', text: 'Each student makes three quality products to “pay” for the class.' },
+  { n: '04', title: 'Sold to fund more', text: 'Products sell online and in stores on a sliding pay scale.' },
+];
+const colors = [
+  { name: 'Growth', value: '#0b966c' },
+  { name: 'Craft', value: '#ff7c4b' },
+  { name: 'Warmth', value: '#fbba4e' },
+  { name: 'Headlines', value: '#313484' },
+  { name: 'Calm', value: '#b2c3f7' },
+  { name: 'Base', value: '#f7f4f1' },
+];
+const benchmarks = [
+  { name: 'Self-Help Groups', works: 'Peer-led, community-owned and personal. Members teach each other relevant skills.', improve: 'Irregular meetings and weak organization.' },
+  { name: 'Taleemabad', works: 'National-standard textbooks, AI teaching support and modular training.', improve: 'Teaches subjects more than skills, and needs digital access.' },
+  { name: 'WWOOF', works: 'A digital platform that connects people in person around hands-on skills.', improve: 'The same model could work for education with a standard program.' },
+];
+const stakeholders = [
+  { level: 'Primary users', title: 'Learners', text: 'Underprivileged teens and adults who never went to school and want income-generating skills.', color: '#fbba4e' },
+  { level: 'Secondary users', title: 'Instructors', text: 'Artisans, craftsmen, professionals, NGOs and community service organizations.', color: '#0b966c' },
+  { level: 'Tertiary users', title: 'Community', text: 'Locals who provide space, program directors, store owners in cities and customers.', color: '#ff7c4b' },
+];
+const stats = [
+  { value: '258M', text: 'children and youth worldwide are not enrolled in school' },
+  { value: '773M', text: 'adults around the world cannot read' },
+  { value: '<60%', text: 'enrollment and literacy rates in Pakistan' },
+  { value: '~2%', text: 'of Pakistan’s GDP is spent on education' },
+];
+const screens = [
+  { title: 'Home page', text: 'A clear mission up front, featured vendors, and the story behind SkilLender.' },
+  { title: 'Workshops page', text: 'Filter by craft, see who’s teaching and when, and register in one tap.' },
+  { title: 'Products page', text: 'Every product is handmade by a workshop learner, with the maker’s name on each card.' },
+  { title: 'Product details', text: 'Photos, specifications, price in rupees and related items from other makers.' },
+  { title: 'Community page', text: 'A learning inquiry board, a form to share a skill, and color-coded meetups.' },
+];
+---
+
+<Base
+  page="skillender"
+  title="SkilLender"
+  accent={project.accent}
+  progress
+  ogImage="home/skillender.jpg"
+  description="SkilLender is a skill-sharing platform connecting artisans, educators and learners in Pakistan through free hands-on workshops."
+>
+  <div class="skillender-page">
+    <header class="intro container-wide" aria-labelledby="case-title">
+      <p class="label crumbs"><a class="link-draw" href="/work">Work</a><span aria-hidden="true">/</span><span>UX Design</span></p>
+      <div class="intro-main">
+        <h1 id="case-title" class="display title" data-split="intro">SkilLender</h1>
+        <p class="lead description" data-reveal><strong>SkilLender</strong> is a skill-sharing platform that connects artisans, educators and learners in Pakistan through free hands-on workshops, then sells what students make to help fund the next class.</p>
+      </div>
+      <dl class="project-meta" data-stagger="0.06">
+        <div class="meta-type" data-reveal><dt class="label">Type</dt><dd>UX Design &amp; Branding</dd></div>
+        <div class="meta-team" data-reveal><dt class="label">Team</dt><dd>Khadija Sardar, Iris Murphy, Julie Steeb</dd></div>
+        <div class="meta-scope" data-reveal><dt class="label">Scope</dt><dd><ul>{scope.map((item) => <li class="pill">{item}</li>)}</ul></dd></div>
+      </dl>
+    </header>
+
+    <figure class="hero-art container-wide" data-reveal="clip">
+      <Img src="work/skillender.jpg" alt="SkilLender website concept with the home page, product shop, workshop listings, featured vendors and mission" sizes="(min-width: 1440px) 1312px, 92vw" eager />
+      <figcaption class="label">A PLATFORM FOR LEARNING, MAKING, AND SHARING</figcaption>
+    </figure>
+
+    <section class="story container" aria-label="Problem and solution">
+      <article data-reveal>
+        <SectionTitle marker="#0b966c" id="problem">Problem</SectionTitle>
+        <p class="copy">In Pakistan, millions of people never get the chance to learn. School is too expensive, too far away, or simply out of reach, and many leave early to work or help at home. Without skills, they stay stuck in low-income work they can’t escape.</p>
+      </article>
+      <article data-reveal>
+        <SectionTitle marker="#0b966c" id="solution">Solution</SectionTitle>
+        <p class="copy">SkilLender offers free, hands-on workshops taught by local artisans and business owners. In exchange, each student makes three quality products that are sold online and in stores, so the system pays for itself and keeps growing.</p>
+      </article>
+    </section>
+
+    <section class="challenge container" aria-labelledby="challenge-title">
+      <div class="challenge-copy">
+        <SectionTitle marker="#0b966c" id="challenge-title">The Challenge</SectionTitle>
+        <p class="copy">Our brief was the UN’s <strong>SDG 4: Quality Education.</strong> We focused on target 4.4, increasing the number of youth and adults with real job skills, and chose Pakistan as our case study.</p>
+      </div>
+      <ul class="stats" data-stagger="0.08">{stats.map((stat) => <li data-reveal><strong>{stat.value}</strong><span class="copy">{stat.text}</span></li>)}</ul>
+    </section>
+
+    <section class="benchmark container" aria-labelledby="benchmark-title">
+      <SectionTitle marker="#0b966c" id="benchmark-title">Benchmarking</SectionTitle>
+      <p class="copy benchmark-lead">We studied existing education services and community programs in Pakistan and abroad to find what works and where the gaps are. Most focus on school subjects and need devices many people can’t afford.</p>
+      <div class="benchmark-cards" data-stagger="0.09">{benchmarks.map((item) => <article class="benchmark-card" data-reveal><h3>{item.name}</h3><p class="label">Works well</p><p class="copy">{item.works}</p><p class="label">Could improve</p><p class="copy">{item.improve}</p></article>)}</div>
+    </section>
+
+    <section class="stakeholders container" aria-labelledby="stakeholders-title">
+      <SectionTitle marker="#0b966c" id="stakeholders-title">Stakeholders</SectionTitle>
+      <div class="stakeholder-cards" data-stagger="0.08">{stakeholders.map((person) => <article class="stakeholder-card" data-reveal><p class="label" style={`--dot:${person.color}`}>{person.level}</p><h3>{person.title}</h3><p class="copy">{person.text}</p></article>)}</div>
+    </section>
+
+    <section class="cycle container" aria-labelledby="cycle-title">
+      <SectionTitle marker="#0b966c" id="cycle-title">How It Works</SectionTitle>
+      <p class="copy cycle-lead">We built a circular system inspired by equipment rental, sliding pay scales, fair-trade shops and the glassblowing “make one, give one” model.</p>
+      <ol class="steps" data-stagger="0.08">{steps.map((step) => <li data-reveal><span class="label step-number">{step.n}</span><h3>{step.title}</h3><p class="copy">{step.text}</p>{step.n !== '04' && <span class="step-arrow" aria-hidden="true">↓</span>}</li>)}</ol>
+      <p class="cycle-note">↻ Sales and donations fund the next workshop, so the system sustains itself.</p>
+    </section>
+
+    <section class="exploration container" aria-labelledby="exploration-title">
+      <SectionTitle marker="#0b966c" id="exploration-title">Sketch Exploration</SectionTitle>
+      <p class="copy">We each sketched a pamphlet, then tested one combined layout. Feedback pushed us further: a brochure alone couldn’t build a market, so we expanded SkilLender into a <strong>website</strong> that connects learners, artisans and customers.</p>
+      <div class="iteration-cards" data-stagger="0.08">
+        <article data-reveal><span class="label">01 · Iris Murphy</span><h3>Pamphlet prototype</h3></article>
+        <article data-reveal><span class="label">02 · Julie Steeb</span><h3>Pamphlet prototype</h3></article>
+        <article data-reveal><span class="label">03 · Khadija Sardar</span><h3>Pamphlet prototype</h3></article>
+      </div>
+    </section>
+
+    <section class="moodboard container" aria-labelledby="moodboard-title">
+      <SectionTitle marker="#0b966c" id="moodboard-title">Moodboard</SectionTitle>
+      <p class="copy">We looked for bright but cohesive colors, subtle layering that relates to the place being served, easy-to-read icons, and clear titles with action statements.</p>
+      <div class="moodboard-tags" data-stagger="0.06">{['Bright, but not childish', 'Subtle layers', 'Easy-to-read imagery', 'Clear action titles'].map((tag) => <span class="pill" data-reveal>{tag}</span>)}</div>
+    </section>
+
+    <section class="journey container" aria-labelledby="journey-title">
+      <SectionTitle marker="#0b966c" id="journey-title">User Journey</SectionTitle>
+      <p class="copy">A learner hears about SkilLender through the website, a community representative or word of mouth, learns a skill in a free workshop, makes three products, and takes the skill into a better job or their own business.</p>
+      <div class="journey-flow" data-stagger="0.08"><span data-reveal>Hear about it</span><b aria-hidden="true">→</b><span data-reveal>Learn a skill</span><b aria-hidden="true">→</b><span data-reveal>Make three products</span><b aria-hidden="true">→</b><span data-reveal>Build a livelihood</span></div>
+    </section>
+
+    <section class="lowfi container" aria-labelledby="lowfi-title">
+      <SectionTitle marker="#0b966c" id="lowfi-title">Low Fidelity Prototype</SectionTitle>
+      <div class="lowfi-board" data-reveal>
+        <div><span class="label">Home</span><b>Mission<br />Featured vendors</b></div><div><span class="label">About</span><b>Our story<br />Our impact</b></div><div><span class="label">Workshops</span><b>Find a class<br />Meet the makers</b></div><div><span class="label">Products</span><b>Browse work<br />Support the next class</b></div><div><span class="label">Community</span><b>Ask a question<br />Share a skill</b></div>
+      </div>
+      <p class="label lowfi-caption">EARLY WEBSITE WIREFRAME STRUCTURE</p>
+    </section>
+
+    <section class="usability container" aria-labelledby="usability-title">
+      <SectionTitle marker="#0b966c" id="usability-title">Usability Study</SectionTitle>
+      <p class="copy usability-lead">We shared the wireframes in critique to see how clearly the workshop schedule came across.</p>
+      <div class="usability-grid">
+        <article><h3>Insights</h3><ul><li>The overall wireframe worked well.</li><li>Workshops were hard to scan and plan around as a list.</li></ul></article>
+        <article><h3>Improvements</h3><p class="copy">We added a calendar with a different color for each workshop, so learners can tell sessions apart at a glance and plan ahead. The color-coded meetups appear on the Community page.</p></article>
+      </div>
+    </section>
+
+    <section class="logo-section container" aria-labelledby="logo-title">
+      <SectionTitle marker="#0b966c" id="logo-title">Logo</SectionTitle>
+      <p class="copy">We explored several marks before landing on a simple, warm symbol that pairs the green of growth with the orange and yellow of handmade craft.</p>
+      <div class="wordmark" data-reveal><span class="mark-symbol" aria-hidden="true"><i></i><b></b><em></em></span><strong>SkilLender</strong></div>
+    </section>
+
+    <section class="identity container" aria-labelledby="palette-title">
+      <div>
+        <SectionTitle marker="#0b966c" id="palette-title">Color Palette</SectionTitle>
+        <p class="copy identity-copy">We chose warm, bright colors that feel hopeful without being childish. #0B966C stands for growth and drives every action, #FF7C4B and #FBBA4E bring the warmth of handmade craft, #313484 anchors headlines, and #F7F4F1 keeps everything soft and readable.</p>
+      </div>
+      <ul class="palette" aria-label="SkilLender color palette" data-stagger="0.08">{colors.map((color) => <li data-reveal><span class="swatch" style={`--swatch:${color.value}`}></span><span class="label">{color.value}</span><span>{color.name}</span></li>)}</ul>
+    </section>
+
+    <section class="typography container" aria-labelledby="type-title">
+      <SectionTitle marker="#0b966c" id="type-title">Typography</SectionTitle>
+      <p class="copy">The reference pairs bold Montserrat headlines with a clean body face. This page keeps the site’s Montserrat typography and fluid text sizing throughout.</p>
+      <div class="type-specimen" data-reveal><strong>Montserrat</strong><span>Aa Bb Cc Dd Ee Ff Gg Hh Ii Jj Kk Ll Mm Nn Oo Pp Qq Rr Ss Tt Uu Vv Ww Xx Yy Zz</span><span>1234567890 .,;’!@#$%^&amp;*</span></div>
+    </section>
+
+    <section class="experience container-wide" aria-labelledby="ui-title">
+      <div class="experience-copy" data-reveal>
+        <SectionTitle marker="#0b966c" id="ui-title">UI Kit</SectionTitle>
+        <p class="copy">The brand mark, palette, type and reusable interface pieces come together as one toolkit for the platform.</p>
+      </div>
+      <figure class="experience-art" data-reveal="clip"><Img src="home/skillender.jpg" alt="SkilLender website concept with its home, workshop, product and community pages" sizes="(min-width: 1440px) 900px, 92vw" /></figure>
+    </section>
+
+    <section class="website container-wide" aria-labelledby="website-title">
+      <SectionTitle marker="#0b966c" id="website-title">High Fidelity Website</SectionTitle>
+      <p class="copy">The final concept brings the learning journey, shop and community into a single connected experience.</p>
+      <div class="screen-list" data-stagger="0.06">{screens.map((screen, i) => <article data-reveal><span class="label">0{i + 1} / SKILLENDER.COM</span><h3>{screen.title}</h3><p class="copy">{screen.text}</p></article>)}</div>
+      <figure class="website-art" data-reveal="clip"><Img src="work/skillender.jpg" alt="SkilLender high fidelity website presentation showing the home page, workshop listings, product shop and community concept" sizes="(min-width: 1440px) 1312px, 92vw" /></figure>
+    </section>
+
+    <section class="brochure container-wide" aria-labelledby="brochure-title">
+      <div><SectionTitle marker="#0b966c" id="brochure-title">Brochure</SectionTitle><p class="copy">A tri-fold brochure brings SkilLender offline, where many learners can’t access the internet. It explains the SDGs, the Pakistan case study, and how students, instructors, stores and donors fit together.</p></div>
+      <div class="brochure-panels" data-reveal="clip"><article><span class="label">SKILLENDER</span><h3>Learn a skill.<br />Build a future.</h3><p>Free, hands-on workshops with local makers.</p></article><article><span class="label">OUR MODEL</span><h3>Learn · Make · Share</h3><p>Student-made products help make the next class possible.</p></article><article><span class="label">JOIN IN</span><h3>Be part of the community.</h3><p>Teach a skill, join a workshop, or support a learner.</p></article></div>
+    </section>
+
+    <section class="closing container-wide" aria-label="Project summary" data-reveal>
+      <p class="label">SKILLENDER · UX DESIGN &amp; BRANDING</p>
+      <p class="closing-line">Learn a skill.<br /><em>Make it matter.</em></p>
+      <a class="link-draw" href="/work">Back to selected work <span aria-hidden="true">↗</span></a>
+    </section>
+  </div>
+
+  <NextProject current="skillender" />
+</Base>
+
+<style>
+  :global(html[data-page="skillender"] body.theme-light) { --page-bg:#f7f4f1; --page-fg:#25253f; --body-fg:#686774; --ink:#25253f; --ink-2:#686774; --ink-3:#777582; --line:rgba(49,52,132,.16); --paper:#f7f4f1; --paper-2:#eeece9; }
+  .skillender-page { overflow:hidden; color:#25253f; }
+  .intro { padding-top:clamp(126px,17vh,206px); }
+  .crumbs { display:flex; gap:14px; color:#777582; }
+  .intro-main { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr); align-items:end; gap:clamp(34px,6vw,88px); padding-block:clamp(38px,6vw,80px) clamp(46px,6vw,84px); }
+  .title { color:#313484; font-size:var(--fs-display); font-weight:300; line-height:.9; letter-spacing:-.055em; white-space:nowrap; }
+  .description { max-width:35ch; padding-bottom:.2em; color:#686774; }
+  .description strong { color:#313484; font-weight:600; }
+  .project-meta { display:grid; grid-template-columns:minmax(210px,.8fr) minmax(270px,1.2fr); gap:28px clamp(34px,6vw,80px); padding-block:clamp(28px,4vw,52px); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .project-meta > div { display:grid; align-content:start; gap:12px; }
+  .project-meta dt { color:#777582; }
+  .project-meta dd { color:#4d4b5b; }
+  .meta-scope { grid-column:1 / -1; }
+  .meta-scope ul { display:flex; flex-wrap:wrap; gap:8px; list-style:none; }
+  .meta-scope .pill { border:1px solid rgba(49,52,132,.14); border-radius:999px; background:rgba(255,255,255,.48); color:#424154; padding:8px 13px; }
+  .hero-art { position:relative; display:grid; place-items:center; min-height:clamp(300px,44vw,620px); margin-top:clamp(36px,5vw,64px); padding:clamp(24px,5vw,72px); overflow:hidden; border-radius:var(--radius); background-color:#0b966c; background-image:radial-gradient(rgba(255,255,255,.18) .8px,transparent .8px); background-size:18px 18px; }
+  .hero-art :global(img) { display:block; width:min(100%,1120px); height:auto; border:10px solid #20202b; border-radius:12px; box-shadow:0 22px 60px rgba(0,0,0,.28); }
+  .hero-art figcaption { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); }
+  .story { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(38px,8vw,124px); margin-top:var(--section-gap); }
+  .story :global(.section-title),.challenge :global(.section-title),.benchmark :global(.section-title),.stakeholders :global(.section-title),.cycle :global(.section-title),.journey :global(.section-title),.exploration :global(.section-title),.moodboard :global(.section-title),.lowfi :global(.section-title),.usability :global(.section-title),.logo-section :global(.section-title),.identity :global(.section-title),.typography :global(.section-title),.experience :global(.section-title),.website :global(.section-title),.brochure :global(.section-title) { max-width:15ch; margin-bottom:clamp(22px,3vw,38px); color:#313484; }
+  .story article :global(.section-title) { margin-bottom:clamp(20px,3vw,34px); }
+  .story article .copy,.challenge-copy .copy,.benchmark-lead,.journey > .copy,.exploration > .copy,.moodboard > .copy,.lowfi > .copy,.usability-lead,.logo-section > .copy,.identity-copy,.typography > .copy,.website > .copy,.brochure .copy { max-width:70ch; color:#686774; }
+  .challenge,.benchmark,.stakeholders,.cycle,.journey,.exploration,.moodboard,.lowfi,.usability,.logo-section,.identity,.typography,.experience,.website,.brochure { margin-top:var(--section-gap); }
+  .challenge { display:grid; grid-template-columns:minmax(0,.9fr) minmax(320px,1.1fr); align-items:start; gap:clamp(36px,7vw,100px); }
+  .stats { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; list-style:none; }
+  .stats li { display:grid; align-content:start; gap:10px; min-height:145px; padding-top:14px; border-top:1px solid #25253f; }
+  .stats strong { color:#313484; font-size:var(--fs-h2); font-weight:300; line-height:1; letter-spacing:-.045em; }
+  .benchmark-lead { margin-bottom:clamp(28px,4vw,50px); }
+  .benchmark-cards,.stakeholder-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+  .benchmark-card,.stakeholder-card { padding:clamp(24px,3.5vw,44px); border:1px solid rgba(49,52,132,.12); border-radius:var(--radius); background:rgba(255,255,255,.74); }
+  .benchmark-card h3,.stakeholder-card h3 { margin-bottom:20px; color:#25253f; font-family:var(--font-accent); font-size:var(--fs-h3); font-weight:400; line-height:1.1; }
+  .benchmark-card .label { margin:18px 0 6px; color:#777582; }
+  .benchmark-card .copy,.stakeholder-card .copy { color:#686774; }
+  .stakeholder-card .label { display:flex; align-items:center; gap:10px; margin-bottom:18px; color:#0b966c; }
+  .stakeholder-card .label::before { content:''; width:10px; height:10px; border-radius:50%; background:var(--dot); }
+  .cycle-lead { max-width:67ch; margin-bottom:clamp(30px,4vw,52px); color:#686774; }
+  .steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; list-style:none; }
+  .steps li { position:relative; min-height:240px; padding:clamp(22px,3vw,36px); border:1px solid rgba(49,52,132,.12); border-radius:var(--radius); background:rgba(255,255,255,.74); }
+  .step-number { display:block; margin-bottom:clamp(24px,3.5vw,42px); color:#0b966c; }
+  .steps h3 { margin-bottom:12px; color:#25253f; font-family:var(--font-accent); font-size:var(--fs-h3); font-weight:400; line-height:1.12; }
+  .steps .copy { color:#686774; }
+  .step-arrow { position:absolute; right:22px; bottom:16px; color:#0b966c; }
+  .cycle-note { margin-top:20px; padding:18px 22px; border:1px dashed rgba(11,150,108,.4); border-radius:var(--radius); color:#0b966c; font-weight:600; }
+  .journey-flow { display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:32px; }
+  .journey-flow span { padding:12px 16px; border:1px solid rgba(49,52,132,.14); border-radius:999px; background:#fff; color:#313484; }
+  .journey-flow b { color:#0b966c; }
+  .iteration-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; margin-top:30px; }
+  .iteration-cards article { padding:24px; border-radius:var(--radius); background:linear-gradient(130deg,#e6d4e9,#f7d9cb); }
+  .iteration-cards .label { color:#777582; }
+  .iteration-cards h3 { margin:22px 0 10px; color:#313484; font-size:var(--fs-h3); font-weight:400; line-height:1.15; }
+  .iteration-cards .copy { color:#686774; }
+  .moodboard-tags { display:flex; flex-wrap:wrap; gap:10px; margin-top:28px; }
+  .moodboard-tags .pill { border-color:rgba(49,52,132,.14); color:#313484; }
+  .lowfi-board { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:8px; padding:clamp(16px,3vw,32px); border:1px solid rgba(49,52,132,.12); border-radius:var(--radius); background:#fff; }
+  .lowfi-board > div { display:grid; align-content:start; gap:24px; min-height:170px; padding:14px; border:1px solid rgba(49,52,132,.12); background:#fbfaf8; }
+  .lowfi-board .label,.lowfi-caption { color:#777582; }
+  .lowfi-board b { color:#686774; font-weight:400; }
+  .lowfi-caption { margin-top:10px; }
+  .usability-lead { margin-bottom:28px; }
+  .usability-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:clamp(24px,5vw,70px); }
+  .usability-grid h3 { margin-bottom:16px; color:#313484; font-size:var(--fs-h3); font-weight:300; }
+  .usability-grid ul { display:grid; gap:12px; padding-left:24px; color:#686774; }
+  .usability-grid li::marker { color:#ff7c4b; }
+  .wordmark { display:flex; align-items:center; gap:20px; width:fit-content; margin:clamp(28px,5vw,56px) auto 0; color:#0b966c; }
+  .wordmark strong { font-size:var(--fs-h2); font-weight:600; letter-spacing:-.05em; }
+  .mark-symbol { position:relative; display:block; width:76px; height:64px; }
+  .mark-symbol i,.mark-symbol b,.mark-symbol em { position:absolute; display:block; }
+  .mark-symbol i { top:0; left:28px; width:20px; height:18px; background:#0b966c; clip-path:polygon(50% 0,100% 100%,0 100%); }
+  .mark-symbol b { left:0; bottom:0; width:34px; height:39px; background:#fbba4e; clip-path:polygon(0 100%,0 52%,35% 0,100% 27%,100% 100%,67% 78%,67% 48%,35% 34%,25% 51%,25% 100%); }
+  .mark-symbol em { right:0; bottom:0; width:35px; height:39px; background:#ff7c4b; clip-path:polygon(0 27%,65% 0,100% 52%,100% 100%,75% 100%,75% 51%,65% 34%,33% 48%,33% 78%,0 100%); }
+  .identity { display:grid; grid-template-columns:minmax(0,.9fr) minmax(320px,1.1fr); align-items:start; gap:clamp(38px,8vw,124px); }
+  .palette { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; list-style:none; }
+  .palette li { display:grid; gap:6px; padding:18px; border:1px solid rgba(49,52,132,.1); border-radius:var(--radius); background:#fff; }
+  .swatch { display:block; width:100%; aspect-ratio:1.5; border-radius:calc(var(--radius) * .7); background:var(--swatch); }
+  .palette li:last-child .swatch { border:1px solid rgba(49,52,132,.12); }
+  .palette .label { color:#313484; }
+  .palette li > span:last-child { color:#686774; }
+  .type-specimen { display:grid; gap:14px; margin-top:28px; padding:clamp(26px,4vw,48px); border:1px solid rgba(49,52,132,.12); border-radius:var(--radius); background:#fff; color:#686774; }
+  .type-specimen strong { color:#313484; font-size:var(--fs-h2); font-weight:600; letter-spacing:-.04em; }
+  .experience { display:grid; grid-template-columns:minmax(260px,.7fr) minmax(0,1.3fr); align-items:center; gap:clamp(38px,7vw,104px); }
+  .experience-copy .copy { max-width:48ch; margin-top:26px; color:#686774; }
+  .experience-art { overflow:hidden; border-radius:var(--radius); background:#f7f4f1; }
+  .experience-art :global(img) { display:block; width:100%; height:auto; transition:transform 1.2s var(--ease-out); }
+  .experience-art:hover :global(img) { transform:scale(1.025); }
+  .screen-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:32px; }
+  .screen-list article { padding:clamp(20px,3vw,32px); border:1px solid rgba(49,52,132,.12); border-radius:var(--radius); background:#fff; }
+  .screen-list article:first-child { grid-column:1/-1; }
+  .screen-list .label { color:#777582; }
+  .screen-list h3 { margin:18px 0 8px; color:#313484; font-size:var(--fs-h3); font-weight:300; }
+  .screen-list .copy { color:#686774; }
+  .website-art { margin-top:clamp(28px,4vw,52px); overflow:hidden; border-radius:var(--radius); background:#0b966c; }
+  .website-art :global(img) { display:block; width:100%; height:auto; }
+  .brochure { display:grid; grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr); align-items:start; gap:clamp(38px,7vw,100px); }
+  .brochure-panels { display:grid; grid-template-columns:repeat(3,1fr); min-height:300px; overflow:hidden; border-radius:var(--radius); box-shadow:0 14px 34px rgba(37,37,63,.12); }
+  .brochure-panels article { display:flex; flex-direction:column; justify-content:space-between; gap:24px; padding:clamp(18px,2.6vw,30px); background:#0b966c; color:#fff; }
+  .brochure-panels article:nth-child(2) { background:#ff7c4b; }
+  .brochure-panels article:nth-child(3) { background:#313484; }
+  .brochure-panels .label { color:rgba(255,255,255,.8); }
+  .brochure-panels h3 { font-size:var(--fs-h3); font-weight:400; line-height:1.1; }
+  .brochure-panels p { font-size:var(--fs-small); }
+  .closing { display:grid; justify-items:center; gap:24px; margin-top:var(--section-gap); padding-block:clamp(70px,12vw,168px); background:#313484; color:#f7f4f1; text-align:center; }
+  .closing > .label { color:rgba(247,244,241,.7); }
+  .closing-line { font-size:var(--fs-h2); font-weight:300; line-height:1.02; letter-spacing:-.045em; }
+  .closing-line em { color:#fbba4e; font-family:var(--font-accent); }
+  .closing .link-draw { margin-top:12px; }
+  @media (max-width:800px) {
+    .intro-main,.story,.challenge,.experience,.identity,.brochure { grid-template-columns:1fr; }
+    .description { max-width:48ch; }
+    .project-meta { grid-template-columns:1fr 1fr; }
+    .benchmark-cards,.stakeholder-cards { grid-template-columns:1fr; }
+    .steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .steps li { min-height:0; }
+    .step-number { margin-bottom:22px; }
+    .experience-art { order:-1; }
+    .journey-flow { gap:8px; }
+    .journey-flow b { display:none; }
+  }
+  @media (max-width:520px) {
+    .project-meta { grid-template-columns:1fr; }
+    .meta-scope { grid-column:auto; }
+    .steps,.screen-list,.usability-grid { grid-template-columns:1fr; }
+    .screen-list article:first-child { grid-column:auto; }
+    .lowfi-board { grid-template-columns:1fr 1fr; }
+    .iteration-cards { grid-template-columns:1fr; }
+    .palette { grid-template-columns:1fr 1fr; }
+    .wordmark { gap:12px; }
+    .wordmark strong { font-size:var(--fs-h3); }
+    .mark-symbol { transform:scale(.8); transform-origin:right center; }
+    .brochure-panels { min-height:250px; }
+    .brochure-panels article { padding:12px; }
+    .brochure-panels .label { letter-spacing:0; }
+  }
+</style>

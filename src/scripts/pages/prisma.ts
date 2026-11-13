@@ -1,4 +1,4 @@
-// Prisma: hero mouse parallax, step-by-step problem chain, copyable swatches, pinned horizontal proto gallery,
+// Prisma: hero mouse parallax, step-by-step problem chain, copyable swatches, autonomous prototype photo reel,
 // and the product film opening to full bleed.
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -59,22 +59,57 @@ export default function prisma(ctx: MotionCtx) {
     });
   }
 
-  // Proto: pin the section and scrub the photo track sideways (desktop only).
-  const hs = document.querySelector<HTMLElement>('[data-hscroll]');
-  const track = hs?.querySelector<HTMLElement>('[data-hscroll-track]');
-  if (hs && track && !reduced) {
-    const mm = gsap.matchMedia();
-    mm.add('(min-width: 900px)', () => {
-      hs.classList.add('hscroll-on');
-      const distance = () => track.scrollWidth - window.innerWidth + parseFloat(getComputedStyle(track.parentElement!).paddingLeft) * 2;
-      gsap.to(track, {
-        x: () => -distance(),
-        ease: 'none',
-        scrollTrigger: { trigger: hs, start: 'top top+=40', end: () => `+=${distance()}`, scrub: 0.6, pin: true, invalidateOnRefresh: true, anticipatePin: 1 },
-      });
-      return () => hs.classList.remove('hscroll-on');
+  // Move the prototype process gallery on its own while it is in view.
+  const reel = document.querySelector<HTMLElement>('.proto');
+  const viewport = reel?.querySelector<HTMLElement>('[data-proto-viewport]');
+  const track = reel?.querySelector<HTMLElement>('[data-proto-track]');
+  const toggle = reel?.querySelector<HTMLButtonElement>('[data-proto-toggle]');
+  if (reel && viewport && track && !reduced) {
+    let userPaused = false;
+    let tween: gsap.core.Tween | undefined;
+    const playIfAllowed = () => { if (!userPaused) tween?.play(); };
+    const distance = () => track.scrollWidth / 2;
+    tween = gsap.to(track, {
+      x: () => -distance(),
+      duration: () => gsap.utils.clamp(28, 60, distance() / 105),
+      ease: 'none',
+      repeat: -1,
+      paused: true,
+      scrollTrigger: {
+        trigger: reel,
+        start: 'top bottom',
+        end: 'bottom top',
+        onEnter: playIfAllowed,
+        onEnterBack: playIfAllowed,
+        onLeave: () => tween?.pause(),
+        onLeaveBack: () => tween?.pause(),
+        invalidateOnRefresh: true,
+      },
     });
-    ctx.onCleanup(() => mm.revert());
+    if (ScrollTrigger.isInViewport(reel)) tween.play();
+    const onToggle = () => {
+      userPaused = !userPaused;
+      toggle?.setAttribute('aria-pressed', String(userPaused));
+      if (toggle) toggle.textContent = userPaused ? 'Play motion' : 'Pause motion';
+      if (userPaused) tween?.pause();
+      else if (ScrollTrigger.isInViewport(reel)) tween?.play();
+    };
+    const onEnter = () => tween?.pause();
+    const onLeave = () => { if (!userPaused && ScrollTrigger.isInViewport(reel)) tween?.play(); };
+    toggle?.addEventListener('click', onToggle);
+    viewport.addEventListener('pointerenter', onEnter);
+    viewport.addEventListener('pointerleave', onLeave);
+    viewport.addEventListener('focusin', onEnter);
+    viewport.addEventListener('focusout', onLeave);
+    ctx.onCleanup(() => {
+      toggle?.removeEventListener('click', onToggle);
+      viewport.removeEventListener('pointerenter', onEnter);
+      viewport.removeEventListener('pointerleave', onLeave);
+      viewport.removeEventListener('focusin', onEnter);
+      viewport.removeEventListener('focusout', onLeave);
+      tween?.scrollTrigger?.kill();
+      tween?.kill();
+    });
   }
 
   // Film: inset frame opens to full bleed.

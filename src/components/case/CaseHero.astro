@@ -6,9 +6,13 @@ interface Props {
   project: Project;
   /** Dark intro band (Prisma), regardless of the page theme. */
   dark?: boolean;
+  /** Optional project wordmark used in place of the text title. */
+  logo?: { src: string; alt: string };
+  /** Optional device mockup placed beside a custom wordmark. */
+  sideMockup?: { src: string; alt: string };
 }
 
-const { project: p, dark = false } = Astro.props;
+const { project: p, dark = false, logo, sideMockup } = Astro.props;
 const hero = p.hero!;
 ---
 
@@ -19,18 +23,32 @@ const hero = p.hero!;
       <span aria-hidden="true">/</span>
       <span>{p.category}</span>
     </p>
-    <h1 id="case-title" class="display title" data-split="intro">{p.name}</h1>
-    <p class="lead desc" data-reveal>
-      <strong>{p.mark}</strong>
-      {p.description}
-    </p>
+    {sideMockup ? (
+      <div class="brand-intro">
+        <div class="brand-copy">
+          <h1 id="case-title" class:list={['brand-mark', { 'text-mark': !logo }]}>{logo ? <Img src={logo.src} alt={logo.alt} sizes="(min-width: 900px) 38vw, 80vw" eager /> : p.mark}</h1>
+          <p class="lead desc" data-reveal><strong>{p.mark}</strong> {p.description}</p>
+        </div>
+        <div class="hero-side" data-reveal="clip"><Img src={sideMockup.src} alt={sideMockup.alt} sizes="(min-width: 900px) 56vw, 100vw" eager /></div>
+      </div>
+    ) : (
+      <>
+        <h1 id="case-title" class="display title" data-split="intro">{p.name}</h1>
+        <p class="lead desc" data-reveal>
+          <strong>{p.mark}</strong>
+          {p.description}
+        </p>
+      </>
+    )}
   </div>
-  <div class="hero-frame" data-hero>
-    <div class="hero-media" transition:name={`hero-${p.slug}`} data-hero-media>
-      <Img src={hero.src} alt={hero.alt} sizes="100vw" eager />
-      <slot name="overlay" />
+  {!sideMockup && (
+    <div class="hero-frame" data-hero>
+      <div class="hero-media" transition:name={`hero-${p.slug}`} data-hero-media>
+        <Img src={hero.src} alt={hero.alt} sizes="100vw" eager />
+        <slot name="overlay" />
+      </div>
     </div>
-  </div>
+  )}
 </section>
 
 <style>
@@ -76,6 +94,22 @@ const hero = p.hero!;
     font-weight: 600;
   }
 
+  .brand-intro {
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);
+    align-items:center;
+    gap:clamp(28px,6vw,96px);
+    padding-top:clamp(16px,3vw,36px);
+  }
+
+  .brand-mark { width:min(100%,480px); }
+  .brand-mark :global(img) { width:100%; }
+  .brand-mark.text-mark { max-width:none; font-size:var(--fs-mega); font-weight:300; line-height:.9; letter-spacing:-.055em; }
+  .brand-copy .desc { max-width:48ch; margin-top:clamp(26px,4vw,48px); }
+  .hero-side { overflow:hidden; border-radius:var(--radius); }
+  .hero-side :global(img) { width:100%; max-height:460px; object-fit:contain; }
+
   .hero-frame {
     position: relative;
     overflow: hidden;
@@ -94,5 +128,8 @@ const hero = p.hero!;
     .intro {
       grid-template-columns: 1fr;
     }
+    .brand-intro { grid-template-columns:1fr; }
+    .brand-mark { width:min(78%,420px); }
+    .hero-side :global(img) { max-height:none; }
   }
 </style>
