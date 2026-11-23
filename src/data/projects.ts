@@ -37,8 +37,8 @@ export const projects: Project[] = [
     hero: { src: 'prisma/hero.jpg', alt: 'Two Prisma speakers with RGB-lit edges in front of large glowing PRISMA lettering' },
     band: { src: 'work/prisma.jpg', alt: 'Two Prisma speakers with glowing RGB light edges', bg: '#000', marker: '#fce5d6', dark: true },
     meta: {
-      type: 'Industrial Design',
-      scope: ['User Research', 'Ideation', 'Branding', 'CAD', 'Prototyping', 'Packaging', 'App Design'],
+      type: 'Industrial Design + UI/UX',
+      scope: ['User Research', 'Ideation', 'Branding', 'CAD', 'Prototyping', 'Packaging', 'UX Flows', 'App UI Design'],
     },
   },
   {
