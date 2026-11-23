@@ -8,12 +8,14 @@ interface Props {
   sizes?: string;
   class?: string;
   eager?: boolean;
+  /** Encoder quality (1-100). Hero renders use a higher value. */
+  quality?: number;
   'aria-hidden'?: boolean;
   /** Extra attributes for the <img> (e.g. data hooks for motion). */
   [key: `data-${string}`]: string | undefined;
 }
 
-const { src, alt, sizes = '(min-width: 1280px) 1180px, 100vw', class: className, eager = false, ...rest } = Astro.props;
+const { src, alt, sizes = '(min-width: 1280px) 1180px, 100vw', class: className, eager = false, quality = 78, ...rest } = Astro.props;
 const image = asset(src);
 // Responsive widths never exceed the exported source, so nothing is upscaled.
 const widths = [400, 640, 960, 1280, 1600, 2000, 2560].filter((w) => w < image.width);
@@ -34,7 +36,7 @@ const height = Math.round(image.height / 2);
   widths={widths}
   sizes={sizes}
   class={className}
-  quality={78}
+  quality={quality}
   loading={eager ? 'eager' : 'lazy'}
   decoding={eager ? 'sync' : 'async'}
   fetchpriority={eager ? 'high' : 'auto'}

@@ -16,6 +16,8 @@ import prisma from './pages/prisma';
 import tiffin from './pages/tiffin';
 import pennie from './pages/pennie';
 import personal from './pages/personal';
+import gosafe from './pages/gosafe';
+import skillender from './pages/skillender';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -33,7 +35,7 @@ export interface MotionCtx {
 }
 
 type PageModule = (ctx: MotionCtx) => void;
-const pages: Record<string, PageModule> = { home, work, prisma, tiffin, pennie, personal };
+const pages: Record<string, PageModule> = { home, work, prisma, tiffin, pennie, personal, gosafe, skillender };
 
 declare global {
   interface Window {
@@ -194,6 +196,44 @@ function primitives(ctx: MotionCtx) {
     );
     videos.forEach((v) => io.observe(v));
     ctx.onCleanup(() => io.disconnect());
+  }
+
+  // Section markers spin into place as their title arrives.
+  if (!reduced) {
+    gsap.utils.toArray<HTMLElement>('.section-title .marker').forEach((m) => {
+      gsap.fromTo(m, { scale: 0, rotation: -135 }, { scale: 1, rotation: 0, duration: DUR.l, ease: 'back.out(2.2)', scrollTrigger: enter(m.parentElement!, 'top 90%') });
+    });
+  }
+
+  // 3D hover tilt with a light glare for cards and panels (mouse/trackpad only).
+  if (!reduced && ctx.fine) {
+    gsap.utils.toArray<HTMLElement>('[data-tilt]').forEach((el) => {
+      const max = Number(el.dataset.tilt) || 6;
+      gsap.set(el, { transformPerspective: 900 });
+      const rx = gsap.quickTo(el, 'rotationX', { duration: 0.6, ease: 'power3.out' });
+      const ry = gsap.quickTo(el, 'rotationY', { duration: 0.6, ease: 'power3.out' });
+      const move = (e: PointerEvent) => {
+        const r = el.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5;
+        const ny = (e.clientY - r.top) / r.height - 0.5;
+        rx(-ny * max);
+        ry(nx * max);
+        el.style.setProperty('--mx', `${(nx + 0.5) * 100}%`);
+        el.style.setProperty('--my', `${(ny + 0.5) * 100}%`);
+      };
+      const leave = () => { rx(0); ry(0); };
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerleave', leave);
+      ctx.onCleanup(() => { el.removeEventListener('pointermove', move); el.removeEventListener('pointerleave', leave); });
+    });
+  }
+
+  // Gentle scroll-linked float for decorative media: data-float="40" (px of travel).
+  if (!reduced) {
+    gsap.utils.toArray<HTMLElement>('[data-float]').forEach((el) => {
+      const d = Number(el.dataset.float) || 40;
+      gsap.fromTo(el, { y: d }, { y: -d, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+    });
   }
 
   // Case-study reading progress.
